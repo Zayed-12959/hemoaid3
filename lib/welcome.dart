@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hemoaid3/registration.dart';
 
 class Welcome extends StatelessWidget {
   const Welcome({super.key});
@@ -102,6 +103,22 @@ class Welcome extends StatelessWidget {
                   ),
 
                   child: Text("Log in", style: TextStyle(color: Colors.white),)),
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 10),
+              child: ElevatedButton(onPressed: () {
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => Registration()
+                  )
+                );
+              },
+                  style: ElevatedButton.styleFrom(
+                      elevation: 10,
+                      backgroundColor: Colors.red,
+                      fixedSize: Size(100,20)
+                  ),
+
+                  child: Text("Sign up", style: TextStyle(color: Colors.white),)),
             )
           ],
         ),

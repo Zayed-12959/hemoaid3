@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:hemoaid3/Dashboard.dart';
 
 class Registration extends StatelessWidget {
-  const Registration ({super.key});
+  final TextEditingController _usernameController = TextEditingController();
+
+  Registration ({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xFFD32F2F),
         title: Text("Register Your Account", style: TextStyle(color: Colors.white),),
         centerTitle: true,
         // leading: IconButton(onPressed: () {}, icon: Icon(Icons.person_2_outlined, color: Colors.white,)),
@@ -27,12 +30,13 @@ class Registration extends StatelessWidget {
               style: TextStyle(
                 fontSize: 45,
                 fontWeight: FontWeight.bold,
-                color: Colors.red,
+                color: Color(0xFFD32F2F),
               ),
             ),
             Container(
               padding: EdgeInsets.only(left: 50, right: 50,bottom: 10,top: 30),
               child: TextField(
+                controller: _usernameController,
                 style: TextStyle(
                   color: Colors.blue,
                 ),
@@ -48,13 +52,13 @@ class Registration extends StatelessWidget {
                     ),
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                            color: Colors.red
+                            color: Color(0xFFD32F2F)
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(40))
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                            color: Colors.red
+                            color: Color(0xFFD32F2F)
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(40))
                     )
@@ -79,13 +83,13 @@ class Registration extends StatelessWidget {
                     ),
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                            color: Colors.red
+                            color: Color(0xFFD32F2F)
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(40))
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                            color: Colors.red
+                            color: Color(0xFFD32F2F)
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(40))
                     )
@@ -110,13 +114,13 @@ class Registration extends StatelessWidget {
                     ),
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                            color: Colors.red
+                            color: Color(0xFFD32F2F)
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(40))
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                            color: Colors.red
+                            color: Color(0xFFD32F2F)
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(40))
                     )
@@ -141,13 +145,13 @@ class Registration extends StatelessWidget {
                     ),
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                            color: Colors.red
+                            color: Color(0xFFD32F2F)
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(40))
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                            color: Colors.red
+                            color: Color(0xFFD32F2F)
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(40))
                     )
@@ -172,13 +176,13 @@ class Registration extends StatelessWidget {
                     ),
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                            color: Colors.red
+                            color: Color(0xFFD32F2F)
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(40))
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                            color: Colors.red
+                            color: Color(0xFFD32F2F)
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(40))
                     )
@@ -187,10 +191,15 @@ class Registration extends StatelessWidget {
             ),
             Container(
               padding: EdgeInsets.only(top: 30),
-              child: ElevatedButton(onPressed: () {},
+              child: ElevatedButton(onPressed: () {
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => Dashboard(username: _usernameController.text)
+                )
+                );
+              },
                   style: ButtonStyle(
                       elevation: WidgetStatePropertyAll(10),
-                      backgroundColor: WidgetStatePropertyAll(Colors.red),
+                      backgroundColor: WidgetStatePropertyAll(Color(0xFFD32F2F)),
                       fixedSize: WidgetStatePropertyAll(Size(100,20))
                   ),
 

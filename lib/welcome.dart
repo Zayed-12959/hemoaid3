@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:hemoaid3/Dashboard.dart';
 import 'package:hemoaid3/registration.dart';
 
 class Welcome extends StatelessWidget {
-  const Welcome({super.key});
+  final TextEditingController _usernameController = TextEditingController();
+
+  Welcome({super.key});  // cant use const because of controller
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xFFD32F2F),
         title: Text("Welcome", style: TextStyle(color: Colors.white),),
         centerTitle: true,
         //leading: IconButton(onPressed: () {}, icon: Icon(Icons.person_2_outlined, color: Colors.white,)),
@@ -28,12 +31,13 @@ class Welcome extends StatelessWidget {
               style: TextStyle(
                 fontSize: 45,
                 fontWeight: FontWeight.bold,
-                color: Colors.red,
+                color: Color(0xFFD32F2F),
               ),
             ),
             Container(
               padding: EdgeInsets.only(left: 50, right: 50,bottom: 10,top: 30),
               child: TextField(
+                controller: _usernameController,
                 style: TextStyle(
                   color: Colors.blue,
                 ),
@@ -49,13 +53,13 @@ class Welcome extends StatelessWidget {
                     ),
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                            color: Colors.red
+                            color: Color(0xFFD32F2F)
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(40))
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                            color: Colors.red
+                            color: Color(0xFFD32F2F)
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(40))
                     )
@@ -80,13 +84,13 @@ class Welcome extends StatelessWidget {
                     ),
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                            color: Colors.red
+                            color: Color(0xFFD32F2F)
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(40))
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                            color: Colors.red
+                            color: Color(0xFFD32F2F)
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(40))
                     )
@@ -95,10 +99,15 @@ class Welcome extends StatelessWidget {
             ),
             Container(
               padding: EdgeInsets.only(top: 30),
-              child: ElevatedButton(onPressed: () {},
+              child: ElevatedButton(onPressed: () {
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => Dashboard(username: _usernameController.text)
+                  )
+                );
+              },
                   style: ElevatedButton.styleFrom(
                       elevation: 10,
-                      backgroundColor: Colors.red,
+                      backgroundColor: Color(0xFFD32F2F),
                       fixedSize: Size(100,20)
                   ),
 
@@ -114,7 +123,7 @@ class Welcome extends StatelessWidget {
               },
                   style: ElevatedButton.styleFrom(
                       elevation: 10,
-                      backgroundColor: Colors.red,
+                      backgroundColor: Color(0xFFD32F2F),
                       fixedSize: Size(100,20)
                   ),
 

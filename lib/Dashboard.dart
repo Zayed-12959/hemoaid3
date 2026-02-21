@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'listTile.dart';
+
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  final String username;
+
+  const Dashboard({super.key, required this.username});
   @override
   State<StatefulWidget> createState() => _DashBoardState();
 }
@@ -12,7 +15,7 @@ class _DashBoardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xFFD32F2F),
         title: Center(
           child: Text(
             'Home',
@@ -49,7 +52,7 @@ class _DashBoardState extends State<Dashboard> {
           ),
         ),
       ),
-      drawer: listTile(),
+      drawer: listTile(username: widget.username),
       body: Column(
         children: [
           Padding(
@@ -87,9 +90,9 @@ class _DashBoardState extends State<Dashboard> {
                         DropdownMenuItem(value: 'O-', child: Text('O-')),
                       ],
                       onChanged:(value){
-                          setState(() {
-                            selectedValue=value;
-                          });
+                        setState(() {
+                          selectedValue=value;
+                        });
                       }
 
                   ),
@@ -100,7 +103,7 @@ class _DashBoardState extends State<Dashboard> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-          items:[ 
+          items:[
             BottomNavigationBarItem(icon: Icon(Icons.home),label: 'Home'),
             BottomNavigationBarItem(icon: Icon(Icons.person),label: 'Profile'),
             BottomNavigationBarItem(icon: Icon(Icons.bloodtype_outlined),label: 'Blood Request'),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class Registration extends StatelessWidget {
   const Registration ({super.key});
 
@@ -46,6 +45,37 @@ class Registration extends StatelessWidget {
                     ),
                     suffixIcon: Icon(
                         Icons.person_2
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors.red
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(40))
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors.red
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(40))
+                    )
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 50, right: 50,bottom: 10),
+              child: TextField(
+                style: TextStyle(
+                  color: Colors.blue,
+                ),
+                decoration: InputDecoration(
+                    label: Text(
+                      "Email",
+                      style: TextStyle(
+                          color: Colors.blue
+                      ),
+                    ),
+                    suffixIcon: Icon(
+                        Icons.mail_outline
                     ),
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(

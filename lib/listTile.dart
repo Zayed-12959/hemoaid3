@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 class listTile extends StatefulWidget {
-  final String username;
-
-  const listTile({super.key, required this.username});
+  const listTile({super.key});
 
   @override
   State<StatefulWidget> createState() =>_listTileState();
@@ -18,7 +16,7 @@ class _listTileState extends State<listTile> {
               width: double.infinity,
               height: 220,
               decoration: BoxDecoration(
-                color: Color(0xFFD32F2F),
+                color: Colors.red,
                 borderRadius: BorderRadius.circular(15),
               ),
               padding: EdgeInsets.all(16),
@@ -33,20 +31,20 @@ class _listTileState extends State<listTile> {
                     radius: 60,
                     backgroundImage: AssetImage('Avatar.png'),
                   ),
-                  Text(widget.username,
+                  Text('Tanin Tahsan',
 
                     style: TextStyle(
                       color: Colors.white,
                     ),
                   ),
 
-                  // Text('tahsantanin6@gmail.com',
-                  //   style: TextStyle(
-                  //     color: Colors.white,
-                  //     fontWeight: FontWeight.w100,
-                  //   ),
-                  //
-                  // ),
+                  Text('tahsantanin6@gmail.com',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w100,
+                    ),
+
+                  ),
 
                 ],
               ),

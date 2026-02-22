@@ -102,7 +102,7 @@ class Welcome extends StatelessWidget {
               child: ElevatedButton(onPressed: () {
                 Navigator.push(context, MaterialPageRoute(
                     builder: (context) => Dashboard(username: _usernameController.text)
-                  )
+                )
                 );
               },
                   style: ElevatedButton.styleFrom(
@@ -118,7 +118,7 @@ class Welcome extends StatelessWidget {
               child: ElevatedButton(onPressed: () {
                 Navigator.push(context, MaterialPageRoute(
                     builder: (context) => Registration()
-                  )
+                )
                 );
               },
                   style: ElevatedButton.styleFrom(

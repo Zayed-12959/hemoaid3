@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hemoaid3/Dashboard.dart';
+import 'package:hemoaid3/address.dart';
 
 class Registration extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
@@ -193,7 +193,7 @@ class Registration extends StatelessWidget {
               padding: EdgeInsets.only(top: 30),
               child: ElevatedButton(onPressed: () {
                 Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => Dashboard(username: _usernameController.text)
+                    builder: (context) => AddressScreen()
                 )
                 );
               },
@@ -203,7 +203,7 @@ class Registration extends StatelessWidget {
                       fixedSize: WidgetStatePropertyAll(Size(100,20))
                   ),
 
-                  child: Text("Confirm", style: TextStyle(color: Colors.white),)),
+                  child: Text("Next", style: TextStyle(color: Colors.white),)),
             )
           ],
         ),

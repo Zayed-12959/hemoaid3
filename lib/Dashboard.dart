@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'listTile.dart';
 import '_info.dart';
+
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  final String username;
+
+  const Dashboard({super.key, required this.username});
   @override
   State<StatefulWidget> createState() => _DashBoardState();
 }
@@ -13,7 +16,7 @@ class _DashBoardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Color(0xFFD32F2F),
         title: Center(
           child: Text(
             'Home',
@@ -24,6 +27,7 @@ class _DashBoardState extends State<Dashboard> {
             ),
           ),
         ),
+
 
         actions: [IconButton(onPressed: () {}, icon: Icon(Icons.search))],
         bottom: PreferredSize(
@@ -48,9 +52,8 @@ class _DashBoardState extends State<Dashboard> {
             ),
           ),
         ),
-
       ),
-      drawer: listTile(),
+      drawer: listTile(username: widget.username),
       body: Column(
         children: [
           Padding(
@@ -73,14 +76,13 @@ class _DashBoardState extends State<Dashboard> {
                     ],
                   ),
                   child: DropdownButton(
-
                       borderRadius: BorderRadius.circular(10),
                       underline: SizedBox(),
                       value: selectedValue,
                       hint: Row(children: [
-                      Icon(Icons.sort),
-                      SizedBox(width: 15),
-                      Text('Sort'),
+                        Icon(Icons.sort),
+                        SizedBox(width: 15),
+                        Text('Sort'),
                       ],),
                       items: [
                         DropdownMenuItem(value:'',child:Text('Nearest location')),
@@ -88,35 +90,34 @@ class _DashBoardState extends State<Dashboard> {
                       ],
 
                       onChanged:(value){
-                          setState(() {
-                            selectedValue=value;
-                          });
+                        setState(() {
+                          selectedValue=value;
+                        });
                       }
-
                   ),
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(40),
-                    border: Border.all(color: Colors.white),
-                    boxShadow: [
-                      BoxShadow(
-                      color: Colors.grey.withValues(alpha: 0.3),
-                      blurRadius: 5,
-                      offset:  Offset(0, 3),
-                    )
-                  ]
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(40),
+                      border: Border.all(color: Colors.white),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withValues(alpha: 0.3),
+                          blurRadius: 5,
+                          offset:  Offset(0, 3),
+                        )
+                      ]
                   ),
                   child: DropdownButton(
-                    borderRadius: BorderRadius.circular(30),
-                    underline: SizedBox(),
-                    hint: Row(children: [
-                      Icon(Icons.filter_alt_outlined),
-                      SizedBox(width: 15),
-                      Text('Filter'),
-                    ],),
+                      borderRadius: BorderRadius.circular(30),
+                      underline: SizedBox(),
+                      hint: Row(children: [
+                        Icon(Icons.filter_alt_outlined),
+                        SizedBox(width: 15),
+                        Text('Filter'),
+                      ],),
                       items:[
                         DropdownMenuItem(value: 'Default', child: Text('Default')),
                         DropdownMenuItem(value: 'A+', child: Text('A+')),
@@ -132,9 +133,7 @@ class _DashBoardState extends State<Dashboard> {
                 ),
               ],
             ),
-
           ),
-
 
           Expanded(
             child: ListView(
@@ -149,13 +148,10 @@ class _DashBoardState extends State<Dashboard> {
                 ]
             ),
           )
-
-
         ],
-
       ),
       bottomNavigationBar: BottomNavigationBar(
-          items:[ 
+          items:[
             BottomNavigationBarItem(icon: Icon(Icons.home),label: 'Home'),
             BottomNavigationBarItem(icon: Icon(Icons.person),label: 'Profile'),
             BottomNavigationBarItem(icon: Icon(Icons.bloodtype_outlined),label: 'Blood Request'),

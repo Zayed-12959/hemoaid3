@@ -114,20 +114,44 @@ class Welcome extends StatelessWidget {
                   child: Text("Log in", style: TextStyle(color: Colors.white),)),
             ),
             Container(
-              padding: EdgeInsets.only(top: 10),
-              child: ElevatedButton(onPressed: () {
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => Registration()
-                )
-                );
-              },
-                  style: ElevatedButton.styleFrom(
-                      elevation: 10,
-                      backgroundColor: Color(0xFFD32F2F),
-                      fixedSize: Size(100,20)
+              padding: EdgeInsets.only(top: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Don't have an account? ",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.black,
+                    ),
                   ),
 
-                  child: Text("Sign up", style: TextStyle(color: Colors.white),)),
+                  MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Registration(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Sign Up",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                          decorationColor: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                ],
+              ),
             )
           ],
         ),

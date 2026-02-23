@@ -21,24 +21,40 @@ class _AddressScreenState extends State<AddressScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFD32F2F),
+        centerTitle: true,
+        title: const Text(
+          "Address",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       body: Stack(
         children: [
 
-          // ── LAYER 1: Full red background ──────────────────
+          // 🔴 Red background (same as Registration)
           Container(
+            color: const Color(0xFFD32F2F),
             width: double.infinity,
             height: double.infinity,
-            color: const Color(0xFFD32F2F),
           ),
 
-          // ── LAYER 2: Curved red shape at bottom ───────────
+          // ⚪ Curved white bottom (same alignment as Registration)
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.55,
+              height: MediaQuery.of(context).size.height * 0.5,
               decoration: const BoxDecoration(
-                color: Colors.white, // slightly darker red
+                color: Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(60),
                   topRight: Radius.circular(60),
@@ -47,102 +63,56 @@ class _AddressScreenState extends State<AddressScreen> {
             ),
           ),
 
-          // ── LAYER 3: All the actual content ───────────────
+          // 📊 Progress Bar (Step 2 active)
           SafeArea(
-            child: Column(
-              children: [
-
-                // ── TOP BAR ─────────────────────────────────
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 35),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Icon(Icons.arrow_back, color: Colors.white),
-                      const Text(
-                        'Address',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: Row(
+                children: List.generate(4, (index) {
+                  return Expanded(
+                    child: Container(
+                      height: 4,
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      decoration: BoxDecoration(
+                        color: index <= 1
+                            ? Colors.white
+                            : Colors.white30,
+                        borderRadius: BorderRadius.circular(2),
                       ),
-                      const Text(
-                        '3/4',
-                        style: TextStyle(
-                            color: Colors.white, fontSize: 14),
-                      ),
-                    ],
-                  ),
+                    ),
+                  );
+                }),
+              ),
+            ),
+          ),
+
+          // 📦 Floating Card (same style as Registration)
+          Center(
+            child: SizedBox(
+              height: 500,
+              child: Card(
+                elevation: 12,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
                 ),
-
-                // ── PROGRESS BAR ────────────────────────────
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: List.generate(4, (index) {
-                      return Expanded(
-                        child: Container(
-                          height: 4,
-                          margin: const EdgeInsets.symmetric(horizontal: 3),
-                          decoration: BoxDecoration(
-                            color: index < 3
-                                ? Colors.white
-                                : Colors.white30,
-                            borderRadius: BorderRadius.circular(2),
-                          ),
-                        ),
-                      );
-                    }),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // ── LOCATION PIN ICON ────────────────────────
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 14),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.location_on,
-                    color: Color(0xFFD32F2F),
-                    size: 110,
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // ── FLOATING WHITE CARD ──────────────────────
-                // margin on left/right = background peeks through
-                // This is the KEY change from before
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    // subtle shadow to make it look "floating"
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.5),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
+                margin: const EdgeInsets.symmetric(horizontal: 25),
+                child: Padding(
+                  padding: const EdgeInsets.all(25),
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    // MainAxisSize.min = shrink to fit content
-                    // like "width: fit-content" in CSS
-                    // Without this the card would stretch to
-                    // fill all remaining vertical space
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
 
-                      // Dropdown: District
+                      const Text(
+                        "Address Details",
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFD32F2F),
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+
                       _buildDropdown(
                         hint: 'Select District*',
                         value: selectedDistrict,
@@ -150,19 +120,19 @@ class _AddressScreenState extends State<AddressScreen> {
                         onChanged: (val) =>
                             setState(() => selectedDistrict = val),
                       ),
-                      const SizedBox(height: 12),
 
-                      // Dropdown: Post Office
+                      const SizedBox(height: 15),
+
                       _buildDropdown(
-                        hint: 'Select Post office*',
+                        hint: 'Select Post Office*',
                         value: selectedPostOffice,
                         items: postOffices,
                         onChanged: (val) =>
                             setState(() => selectedPostOffice = val),
                       ),
-                      const SizedBox(height: 12),
 
-                      // Dropdown: Police Station
+                      const SizedBox(height: 15),
+
                       _buildDropdown(
                         hint: 'Select Police Station*',
                         value: selectedPoliceStation,
@@ -170,26 +140,26 @@ class _AddressScreenState extends State<AddressScreen> {
                         onChanged: (val) =>
                             setState(() => selectedPoliceStation = val),
                       ),
-                      const SizedBox(height: 12),
 
-                      // Text field: Village
+                      const SizedBox(height: 15),
+
                       _buildTextField(
                         controller: villageController,
-                        hint: 'Enter Village/ Home*',
+                        hint: 'Village / Home*',
                       ),
-                      const SizedBox(height: 12),
 
-                      // Text field: Road
+                      const SizedBox(height: 15),
+
                       _buildTextField(
                         controller: roadController,
-                        hint: 'Enter Road/Block/Sector',
+                        hint: 'Road / Block / Sector',
                       ),
-                      const SizedBox(height: 20),
 
-                      // Next Button
+                      const SizedBox(height: 25),
+
                       SizedBox(
                         width: double.infinity,
-                        height: 50,
+                        height: 45,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFD32F2F),
@@ -197,13 +167,10 @@ class _AddressScreenState extends State<AddressScreen> {
                               borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          onPressed: () {
-                            print('Next tapped!');
-                          },
+                          onPressed: () {},
                           child: const Text(
                             'Next',
-                            style: TextStyle(
-                                fontSize: 16, color: Colors.white),
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
                       ),
@@ -211,13 +178,11 @@ class _AddressScreenState extends State<AddressScreen> {
                     ],
                   ),
                 ),
-
-              ],
+              ),
             ),
           ),
 
         ],
-
       ),
     );
   }

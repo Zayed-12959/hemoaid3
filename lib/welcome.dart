@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 //import 'package:hemoaid3/DonorDashboard.dart';
-import 'package:hemoaid3/ReceiverDashboard.dart';
-import 'package:hemoaid3/registration.dart';
+import 'package:hemoaid/ReceiverDashboard.dart';
+import 'package:hemoaid/registration.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({super.key});
@@ -12,6 +12,7 @@ class Welcome extends StatefulWidget {
 
 class _WelcomeState extends State<Welcome> {
   final TextEditingController _usernameController = TextEditingController();
+  bool _snackBarShown = false;
 
   String selectedRole = "";
 
@@ -19,18 +20,18 @@ class _WelcomeState extends State<Welcome> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          toolbarHeight: 100,
-          backgroundColor: Color(0xFFD32F2F),
-          title: Text("Welcome", style: TextStyle(color: Colors.white, fontSize: 35, fontWeight: FontWeight.bold),),
-          centerTitle: true,
-          //leading: IconButton(onPressed: () {}, icon: Icon(Icons.person_2_outlined, color: Colors.white,)),
-          // actions: [
-          //   IconButton(
-          //       onPressed: () {},
-          //       icon: Icon(Icons.menu_outlined, color: Colors.white,))
-          // ],
-        ),
+        // appBar: AppBar(
+        //   toolbarHeight: 100,
+        //   backgroundColor: Color(0xFFD32F2F),
+        //   title: Text("Welcome", style: TextStyle(color: Colors.white, fontSize: 35, fontWeight: FontWeight.bold),),
+        //   centerTitle: true,
+        //   //leading: IconButton(onPressed: () {}, icon: Icon(Icons.person_2_outlined, color: Colors.white,)),
+        //   // actions: [
+        //   //   IconButton(
+        //   //       onPressed: () {},
+        //   //       icon: Icon(Icons.menu_outlined, color: Colors.white,))
+        //   // ],
+        // ),
         body: Stack(
             children: [
 
@@ -62,7 +63,16 @@ class _WelcomeState extends State<Welcome> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Text(
+                        "Welcome!",
+                        style: TextStyle(
+                          fontSize: 50,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
 
+                      SizedBox(height: 50),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 20),
                         child: Row(
@@ -73,6 +83,7 @@ class _WelcomeState extends State<Welcome> {
                               onPressed: () {
                                 setState(() {
                                   selectedRole = "Donor";
+                                  _snackBarShown = false;
                                 });
                               },
                               style: ElevatedButton.styleFrom(
@@ -94,6 +105,7 @@ class _WelcomeState extends State<Welcome> {
                               onPressed: () {
                                 setState(() {
                                   selectedRole = "Receiver";
+                                  _snackBarShown = false;
                                 });
                               },
                               style: ElevatedButton.styleFrom(
@@ -125,13 +137,13 @@ class _WelcomeState extends State<Welcome> {
                         child: TextField(
                           controller: _usernameController,
                           style: TextStyle(
-                            color: Colors.blue,
+                            color: Colors.black,
                           ),
                           decoration: InputDecoration(
                               label: Text(
                                 "Username",
                                 style: TextStyle(
-                                    color: Colors.blue
+                                    color: Colors.black54
                                 ),
                               ),
                               suffixIcon: Icon(
@@ -156,14 +168,14 @@ class _WelcomeState extends State<Welcome> {
                         padding: EdgeInsets.only(left: 50, right: 50),
                         child: TextField(
                           style: TextStyle(
-                            color: Colors.blue,
+                            color: Colors.black,
                           ),
                           obscureText: true,
                           decoration: InputDecoration(
                               label: Text(
                                 "Password",
                                 style: TextStyle(
-                                    color: Colors.blue
+                                    color: Colors.black54
                                 ),
                               ),
                               suffixIcon: Icon(
@@ -200,10 +212,14 @@ class _WelcomeState extends State<Welcome> {
                             );
                           }
                           else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content: Text("Please select Donor or Receiver")),
-                            );
+                            if (!_snackBarShown) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Please select Donor or Receiver"),
+                                ),
+                              );
+                              _snackBarShown = true;
+                            }
                           }
 
                         },

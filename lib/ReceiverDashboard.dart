@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'RequestForm.dart';
 import 'listTile.dart';
 import '_info.dart';
+import 'profile_card.dart';
 
 class Receiverdashboard extends StatefulWidget {
   final String username;
@@ -12,37 +13,39 @@ class Receiverdashboard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<Receiverdashboard> {
+  bool showProfile = false;
+
   final List donors = [
-  {
-  'name': 'Tanin Tahsan',
-  'location': 'Sreekol Laxmikol, Dublia',
-  'bloodGroup': 'B+',
-  },
-  {
-  'name': 'Imran Hossen',
-  'location': 'Pabna Sadar, Pabna',
-  'bloodGroup': 'A+',
-  },
-  {
-  'name': 'Farjana Afrin',
-  'location': 'Dhaka Sadar, Dhaka',
-  'bloodGroup': 'O+',
-  },
-  {
-  'name': 'Tanin Tahsan',
-  'location': 'Sreekol Laxmikol, Dublia',
-  'bloodGroup': 'B+',
-  },
-  {
-  'name': 'Imran Hossen',
-  'location': 'Pabna Sadar, Pabna',
-  'bloodGroup': 'A+',
-  },
-  {
-  'name': 'Farjana Afrin',
-  'location': 'Dhaka Sadar, Dhaka',
-  'bloodGroup': 'O+',
-  }];
+    {
+      'name': 'Tanin Tahsan',
+      'location': 'Sreekol Laxmikol, Dublia',
+      'bloodGroup': 'B+',
+    },
+    {
+      'name': 'Imran Hossen',
+      'location': 'Pabna Sadar, Pabna',
+      'bloodGroup': 'A+',
+    },
+    {
+      'name': 'Farjana Afrin',
+      'location': 'Dhaka Sadar, Dhaka',
+      'bloodGroup': 'O+',
+    },
+    {
+      'name': 'Tanin Tahsan',
+      'location': 'Sreekol Laxmikol, Dublia',
+      'bloodGroup': 'B+',
+    },
+    {
+      'name': 'Imran Hossen',
+      'location': 'Pabna Sadar, Pabna',
+      'bloodGroup': 'A+',
+    },
+    {
+      'name': 'Farjana Afrin',
+      'location': 'Dhaka Sadar, Dhaka',
+      'bloodGroup': 'O+',
+    }];
 
 
   @override
@@ -51,16 +54,16 @@ class _DashBoardState extends State<Receiverdashboard> {
       appBar: AppBar(
         backgroundColor: Color(0xFFD32F2F),
         title: Container(
-            padding: EdgeInsets.symmetric(horizontal: 110),
-            child: Text(
-              'Home',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2.0,
-              ),
+          padding: EdgeInsets.symmetric(horizontal: 110),
+          child: Text(
+            'Home',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 2.0,
             ),
           ),
+        ),
 
 
 
@@ -88,7 +91,14 @@ class _DashBoardState extends State<Receiverdashboard> {
           ),
         ),
       ),
-      drawer: listTile(username: widget.username),
+      drawer: listTile(
+        username: widget.username,
+        onProfileClick: () {
+          setState(() {
+            showProfile = true; // show profile card
+          });
+        },
+      ),
       body: Column(
         children: [
           Padding(
@@ -171,11 +181,29 @@ class _DashBoardState extends State<Receiverdashboard> {
           ),
 
           Expanded(
-            child: ListView.builder(itemCount: donors.length ,itemBuilder: (context,index){
-              return info(name: donors[index]['name'], address: donors[index]['location'], bGroup:donors[index]['bloodGroup']);
-            }
+            child: showProfile
+                ? ListView(
+              children: [
+                ProfileCard(
+                  fullName: widget.username,
+                  bloodGroup: "O+",
+                  age: 22,
+                  location: "New York, USA",
+                  imagePath: "Avatar.png",
+                  donationCount: 7,
+                ),
+              ],
+            )
+                : ListView.builder(
+              itemCount: donors.length,
+              itemBuilder: (context, index) {
+                return info(
+                  name: donors[index]['name'],
+                  address: donors[index]['location'],
+                  bGroup: donors[index]['bloodGroup'],
+                );
+              },
             ),
-
           ),
         ],
       ),
@@ -186,14 +214,20 @@ class _DashBoardState extends State<Receiverdashboard> {
             BottomNavigationBarItem(icon: Icon(Icons.bloodtype_outlined),label: 'Blood Request'),
 
           ],
-        onTap: (index){
-          if(index==1){
-            showDialog(
-                context: context,
-                builder: (context)=>Requestform()
-            );
+
+          onTap: (index){
+            if (index == 0) {
+              setState(() {
+                showProfile = false;
+              });
+            }
+            else if(index==1){
+              showDialog(
+                  context: context,
+                  builder: (context)=>Requestform()
+              );
+            }
           }
-        }
 
       ),
     );

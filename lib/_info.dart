@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 class info extends StatefulWidget{
-  const info({super.key});
+  String name='';
+  String address='';
+  String bGroup='';
+  info({super.key,required this.name, required this.address,required this.bGroup});
   @override
   State<StatefulWidget> createState() =>_InfoState();
 }
 class _InfoState extends State<info>{
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 180,
+        height: 160,
         child: Card(
 
             shadowColor: Colors.white70,
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             elevation: 2,
             color: Colors.white,
             child: Container(
@@ -41,15 +45,12 @@ class _InfoState extends State<info>{
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Tanin Tahsan',
+                            Text(widget.name,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16
                               ),),
-                            Text('Sreekol Laxmikol, Dublia',
-
-                            ),
-                            Text('data'),
+                            Text(widget.address),
                           ],
                         ),
                       ),
@@ -57,11 +58,14 @@ class _InfoState extends State<info>{
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text('B+'),
+                          Text(widget.bGroup,style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16
+                          ),),
                           Row(
 
                             children: [
-                              IconButton(color: Colors.red.shade400, onPressed: (){}, icon: Icon(Icons.message)), SizedBox(width: 10),IconButton(color: Colors.red.shade400,onPressed: (){}, icon: Icon(Icons.call)),
+                              IconButton(color: Colors.red.shade400,onPressed: (){}, icon: Icon(Icons.call_outlined)),
 
                             ],
                           ),
@@ -71,14 +75,19 @@ class _InfoState extends State<info>{
                     ],
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ElevatedButton(onPressed: (){},
-                        child:Text('View Details'),
+
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                        ),
+                        onPressed: (){},
+                        child:Text('View Details',style: TextStyle(
+                          color: Colors.black,
+                        ),
+                        ),
                       ),
-                      ElevatedButton(onPressed: (){},
-                        child:Text('View Details'),
-                      )
                     ],
                   ),
 

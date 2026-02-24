@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hemoaid3/Dashboard.dart';
+import 'package:hemoaid3/DonorDashboard.dart';
+import 'package:hemoaid3/ReceiverDashboard.dart';
 import 'package:hemoaid3/registration.dart';
 
 class Welcome extends StatefulWidget {
@@ -33,14 +34,14 @@ class _WelcomeState extends State<Welcome> {
       body: Stack(
         children: [
 
-        // 🔴 Full red background
+
         Container(
         width: double.infinity,
         height: double.infinity,
         color: const Color(0xFFD32F2F),
         ),
 
-        // ⚪ Curved white bottom container
+
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(
@@ -188,13 +189,13 @@ class _WelcomeState extends State<Welcome> {
                 child: ElevatedButton(onPressed: () {
                   if(selectedRole == "Receiver"){
                     Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => Dashboard(username: _usernameController.text)
+                        builder: (context) => Receiverdashboard(username: _usernameController.text)
                       )
                     );
                   }
                   else if(selectedRole == "Donor"){
                     Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => Dashboard(username: _usernameController.text)
+                        builder: (context) => Donordashboard(username: _usernameController.text)
                     )
                     );
                   }

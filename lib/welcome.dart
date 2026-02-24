@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:hemoaid3/Dashboard.dart';
 import 'package:hemoaid3/registration.dart';
 
-class Welcome extends StatelessWidget {
+class Welcome extends StatefulWidget {
+  const Welcome({super.key});
+
+  @override
+  State<Welcome> createState() => _WelcomeState();
+}
+
+class _WelcomeState extends State<Welcome> {
   final TextEditingController _usernameController = TextEditingController();
 
-  Welcome({super.key});  // cant use const because of controller
+  String selectedRole = "";
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +61,56 @@ class Welcome extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            selectedRole = "Donor";
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                          selectedRole == "Donor" ? Color(0xFFD32F2F) : Colors.white,
+                          foregroundColor:
+                          selectedRole == "Donor" ? Colors.white : Color(0xFFD32F2F),
+                          side: BorderSide(color: Color(0xFFD32F2F)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        child: Text("Donor"),
+                      ),
+
+                      SizedBox(width: 20),
+
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            selectedRole = "Receiver";
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                          selectedRole == "Receiver" ? Color(0xFFD32F2F) : Colors.white,
+                          foregroundColor:
+                          selectedRole == "Receiver" ? Colors.white : Color(0xFFD32F2F),
+                          side: BorderSide(color: Color(0xFFD32F2F)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        child: Text("Receiver"),
+                      ),
+                    ],
+                  ),
+                ),
+
                 Text(
                   "Hemo Aid",
                   style: TextStyle(
@@ -129,10 +186,25 @@ class Welcome extends StatelessWidget {
               Container(
                 padding: EdgeInsets.only(top: 30),
                 child: ElevatedButton(onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => Dashboard(username: _usernameController.text)
-                  )
-                  );
+                  if(selectedRole == "Receiver"){
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => Dashboard(username: _usernameController.text)
+                      )
+                    );
+                  }
+                  else if(selectedRole == "Donor"){
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => Dashboard(username: _usernameController.text)
+                    )
+                    );
+                  }
+                  else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text("Please select Donor or Receiver")),
+                    );
+                  }
+
                 },
                     style: ElevatedButton.styleFrom(
                         elevation: 10,

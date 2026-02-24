@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'welcome.dart';
+
 class listTile extends StatefulWidget {
   final String username;
   final VoidCallback? onProfileClick;
@@ -102,7 +104,15 @@ class _listTileState extends State<listTile> {
           SizedBox(
               height: 50
           ),
-          ElevatedButton(onPressed: () {},
+          ElevatedButton(onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => Welcome()),
+                  (route) => false, // removes all previous screens
+            );
+          },
+
+
               child: Text('Log out',
                 style: TextStyle(
                   color: Colors.black,
@@ -114,7 +124,6 @@ class _listTileState extends State<listTile> {
     );
   }
 }
-
 
 
 

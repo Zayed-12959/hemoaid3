@@ -9,43 +9,43 @@ class Receiverdashboard extends StatefulWidget {
 
   const Receiverdashboard({super.key, required this.username});
   @override
-  State<StatefulWidget> createState() => _DashBoardState();
+  State<StatefulWidget> createState() => _ReceiverDashBoardState();
 }
 
-class _DashBoardState extends State<Receiverdashboard> {
+class _ReceiverDashBoardState extends State<Receiverdashboard> {
   bool showProfile = false;
-
   final List donors = [
-    {
-      'name': 'Tanin Tahsan',
-      'location': 'Sreekol Laxmikol, Dublia',
-      'bloodGroup': 'B+',
-    },
-    {
-      'name': 'Imran Hossen',
-      'location': 'Pabna Sadar, Pabna',
-      'bloodGroup': 'A+',
-    },
-    {
-      'name': 'Farjana Afrin',
-      'location': 'Dhaka Sadar, Dhaka',
-      'bloodGroup': 'O+',
-    },
-    {
-      'name': 'Tanin Tahsan',
-      'location': 'Sreekol Laxmikol, Dublia',
-      'bloodGroup': 'B+',
-    },
-    {
-      'name': 'Imran Hossen',
-      'location': 'Pabna Sadar, Pabna',
-      'bloodGroup': 'A+',
-    },
-    {
-      'name': 'Farjana Afrin',
-      'location': 'Dhaka Sadar, Dhaka',
-      'bloodGroup': 'O+',
-    }];
+
+  {
+  'name': 'Tanin Tahsan',
+  'location': 'Sreekol Laxmikol, Dublia',
+  'bloodGroup': 'B+',
+  },
+  {
+  'name': 'Imran Hossen',
+  'location': 'Pabna Sadar, Pabna',
+  'bloodGroup': 'A+',
+  },
+  {
+  'name': 'Farjana Afrin',
+  'location': 'Dhaka Sadar, Dhaka',
+  'bloodGroup': 'O+',
+  },
+  {
+  'name': 'Tanin Tahsan',
+  'location': 'Sreekol Laxmikol, Dublia',
+  'bloodGroup': 'B+',
+  },
+  {
+  'name': 'Imran Hossen',
+  'location': 'Pabna Sadar, Pabna',
+  'bloodGroup': 'A+',
+  },
+  {
+  'name': 'Farjana Afrin',
+  'location': 'Dhaka Sadar, Dhaka',
+  'bloodGroup': 'O+',
+  }];
 
 
   @override
@@ -54,16 +54,16 @@ class _DashBoardState extends State<Receiverdashboard> {
       appBar: AppBar(
         backgroundColor: Color(0xFFD32F2F),
         title: Container(
-          padding: EdgeInsets.symmetric(horizontal: 110),
-          child: Text(
-            'Home',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 2.0,
+            padding: EdgeInsets.symmetric(horizontal: 110),
+            child: Text(
+              'Home',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 2.0,
+              ),
             ),
           ),
-        ),
 
 
 
@@ -91,14 +91,11 @@ class _DashBoardState extends State<Receiverdashboard> {
           ),
         ),
       ),
-      drawer: listTile(
-        username: widget.username,
-        onProfileClick: () {
-          setState(() {
-            showProfile = true; // show profile card
-          });
-        },
-      ),
+      drawer: listTile(username: widget.username, onProfileClick: () {
+        setState(() {
+          showProfile = true; // show profile card
+        });
+      },),
       body: Column(
         children: [
           Padding(
@@ -214,20 +211,19 @@ class _DashBoardState extends State<Receiverdashboard> {
             BottomNavigationBarItem(icon: Icon(Icons.bloodtype_outlined),label: 'Blood Request'),
 
           ],
-
-          onTap: (index){
-            if (index == 0) {
-              setState(() {
-                showProfile = false;
-              });
-            }
-            else if(index==1){
-              showDialog(
-                  context: context,
-                  builder: (context)=>Requestform()
-              );
-            }
+        onTap: (index){
+          if (index == 0) {
+            setState(() {
+              showProfile = false;
+            });
           }
+          else if(index==1){
+            showDialog(
+                context: context,
+                builder: (context)=>Requestform()
+            );
+          }
+        }
 
       ),
     );

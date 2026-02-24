@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-//import 'package:hemoaid3/DonorDashboard.dart';
-import 'package:hemoaid/ReceiverDashboard.dart';
-import 'package:hemoaid/registration.dart';
+import 'package:hemoaid3/DonorDashboard.dart';
+import 'package:hemoaid3/ReceiverDashboard.dart';
+import 'package:hemoaid3/registration.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({super.key});
@@ -205,12 +205,12 @@ class _WelcomeState extends State<Welcome> {
                             )
                             );
                           }
-                          else if(selectedRole == "Donor"){
-                            Navigator.push(context, MaterialPageRoute(
-                                builder: (context) => Receiverdashboard(username: _usernameController.text)
-                            )
-                            );
-                          }
+                  else if(selectedRole == "Donor"){
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => Donordashboard(username: _usernameController.text)
+                    )
+                    );
+                  }
                           else {
                             if (!_snackBarShown) {
                               ScaffoldMessenger.of(context).showSnackBar(

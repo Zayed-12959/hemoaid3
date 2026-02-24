@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'bloodGroup.dart';
 class AddressScreen extends StatefulWidget {
   @override
   State<AddressScreen> createState() => _AddressScreenState();
@@ -52,7 +52,7 @@ class _AddressScreenState extends State<AddressScreen> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.5,
+              height: MediaQuery.of(context).size.height * 0.55,
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -74,7 +74,7 @@ class _AddressScreenState extends State<AddressScreen> {
                       height: 4,
                       margin: const EdgeInsets.symmetric(horizontal: 4),
                       decoration: BoxDecoration(
-                        color: index <= 1
+                        color: index <= 2
                             ? Colors.white
                             : Colors.white30,
                         borderRadius: BorderRadius.circular(2),
@@ -86,8 +86,40 @@ class _AddressScreenState extends State<AddressScreen> {
             ),
           ),
 
+          // 🏠 Large Home Icon
+          Positioned(
+            top: 50,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      offset: Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.add_location_alt,
+                  size: 55,
+                  color: Color(0xFFD32F2F),
+                ),
+              ),
+            ),
+          ),
+
           // 📦 Floating Card (same style as Registration)
-          Center(
+          Positioned(
+            top: 180,
+            left: 0,
+            right: 0,
             child: SizedBox(
               height: 500,
               child: Card(
@@ -167,7 +199,12 @@ class _AddressScreenState extends State<AddressScreen> {
                               borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BloodGroupScreen(),
+                            ),
+                          );},
                           child: const Text(
                             'Next',
                             style: TextStyle(color: Colors.white),
@@ -197,7 +234,7 @@ class _AddressScreenState extends State<AddressScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: Colors.red[50],
         borderRadius: BorderRadius.circular(10),
       ),
       child: DropdownButtonHideUnderline(
@@ -226,7 +263,7 @@ class _AddressScreenState extends State<AddressScreen> {
         hintText: hint,
         hintStyle: TextStyle(color: Colors.grey[500]),
         filled: true,
-        fillColor: Colors.grey[100],
+        fillColor: Colors.red[50],
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none, // no visible border line

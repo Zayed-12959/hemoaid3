@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hemoaid3/address.dart';
+import 'package:hemoaid/address.dart';
+
+import 'address.dart';
 
 class Registration extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
@@ -34,7 +36,7 @@ class Registration extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.5,
+              height: MediaQuery.of(context).size.height * 0.55,
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -68,7 +70,37 @@ class Registration extends StatelessWidget {
             ),
           ),
 
-          Center(
+          Positioned(
+            top: 50,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      offset: Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.add_a_photo_rounded,
+                  size: 55,
+                  color: Color(0xFFD32F2F),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 180,
+            left: 0,
+            right: 0,
           child: SizedBox(
             height: 500,
             child: Card(
@@ -95,13 +127,13 @@ class Registration extends StatelessWidget {
                       child: TextField(
                         controller: _usernameController,
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: Colors.black,
                         ),
                         decoration: InputDecoration(
                             label: Text(
                               "Username",
                               style: TextStyle(
-                                  color: Colors.blue
+                                  color: Colors.black54
                               ),
                             ),
                             suffixIcon: Icon(
@@ -126,13 +158,13 @@ class Registration extends StatelessWidget {
                       padding: EdgeInsets.only(left: 50, right: 50,bottom: 10),
                       child: TextField(
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: Colors.black,
                         ),
                         decoration: InputDecoration(
                             label: Text(
                               "Email",
                               style: TextStyle(
-                                  color: Colors.blue
+                                  color: Colors.black54
                               ),
                             ),
                             suffixIcon: Icon(
@@ -157,14 +189,14 @@ class Registration extends StatelessWidget {
                       padding: EdgeInsets.only(left: 50, right: 50, bottom: 10),
                       child: TextField(
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: Colors.black,
                         ),
                         obscureText: true,
                         decoration: InputDecoration(
                             label: Text(
                               "Password",
                               style: TextStyle(
-                                  color: Colors.blue
+                                  color: Colors.black54
                               ),
                             ),
                             suffixIcon: Icon(
@@ -189,13 +221,13 @@ class Registration extends StatelessWidget {
                       padding: EdgeInsets.only(left: 50, right: 50, bottom: 10),
                       child: TextField(
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: Colors.black,
                         ),
                         decoration: InputDecoration(
                             label: Text(
                               "Phone Number",
                               style: TextStyle(
-                                  color: Colors.blue
+                                  color: Colors.black54
                               ),
                             ),
                             suffixIcon: Icon(
@@ -220,13 +252,13 @@ class Registration extends StatelessWidget {
                       padding: EdgeInsets.only(left: 50, right: 50, bottom: 10),
                       child: TextField(
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: Colors.black,
                         ),
                         decoration: InputDecoration(
                             label: Text(
                               "NID Number",
                               style: TextStyle(
-                                  color: Colors.blue
+                                  color: Colors.black54
                               ),
                             ),
                             suffixIcon: Icon(

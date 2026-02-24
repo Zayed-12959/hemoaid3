@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 class listTile extends StatefulWidget {
   final String username;
+  final VoidCallback? onProfileClick;
 
-  const listTile({super.key, required this.username});
+  const listTile({super.key, required this.username, required this.onProfileClick,});
 
   @override
   State<StatefulWidget> createState() =>_listTileState();
@@ -47,13 +48,13 @@ class _listTileState extends State<listTile> {
               ],
             ),
           ),
-          ListTile
-
-            (
-
+          ListTile(
             leading: Icon(Icons.person, color: Colors.grey),
             title: Text('My Profile', style: TextStyle(letterSpacing: -0.5)),
-            onTap: () {},
+            onTap: () {
+              Navigator.pop(context); // close drawer
+              if (widget.onProfileClick != null) widget.onProfileClick!();
+            },
           ),
           ListTile(
             leading: Icon(Icons.settings, color: Colors.grey),
@@ -113,4 +114,7 @@ class _listTileState extends State<listTile> {
     );
   }
 }
+
+
+
 

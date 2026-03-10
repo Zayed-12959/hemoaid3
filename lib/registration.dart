@@ -32,7 +32,7 @@ class Registration extends StatelessWidget {
             height: double.infinity,
           ),
 
-          // ⚪ Curved white bottom
+          // white bg
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -47,18 +47,18 @@ class Registration extends StatelessWidget {
             ),
           ),
 
-          // 📊 Progress Bar (Top of Body)
+          // Progress Bar
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: Row(
-                children: List.generate(4, (index) {
+                children: List.generate(3, (index) {
                   return Expanded(
                     child: Container(
                       height: 4,
                       margin: const EdgeInsets.symmetric(horizontal: 4),
                       decoration: BoxDecoration(
-                        color: index == 0   // 👈 Step 1 active
+                        color: index == 0
                             ? Colors.white
                             : Colors.white30,
                         borderRadius: BorderRadius.circular(2),
@@ -125,6 +125,7 @@ class Registration extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.only(left: 50, right: 50,bottom: 10,top: 30),
                       child: TextField(
+
                         controller: _usernameController,
                         style: TextStyle(
                           color: Colors.black,

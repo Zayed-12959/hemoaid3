@@ -54,7 +54,7 @@ class _listTileState extends State<listTile> {
             leading: Icon(Icons.person, color: Colors.grey),
             title: Text('My Profile', style: TextStyle(letterSpacing: -0.5)),
             onTap: () {
-              Navigator.pop(context); // close drawer
+              Navigator.pop(context);
               if (widget.onProfileClick != null) widget.onProfileClick!();
             },
           ),
@@ -108,7 +108,7 @@ class _listTileState extends State<listTile> {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => Welcome()),
-                  (route) => false, // removes all previous screens
+                  (route) => false,
             );
           },
 
@@ -124,6 +124,3 @@ class _listTileState extends State<listTile> {
     );
   }
 }
-
-
-

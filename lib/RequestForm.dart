@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hemoaid3/checkout_blood.dart';
+import 'package:hemoaid/checkout_blood.dart';
 
 import 'ReceiverDashboard.dart';
 
@@ -50,10 +50,9 @@ class _RequestFormState extends State<Requestform> {
 
                 Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: Container(
-                    width: 80,
-                    height: 80,
-                    color: Colors.lightGreen,
+                  child: Image.asset(
+                    "assets/Blood.png",
+                    width: 100,
                   ),
                 ),
                 Padding(
@@ -137,15 +136,15 @@ class _RequestFormState extends State<Requestform> {
                         setState(() {
 
 
-                        if(value=='Urgent'){
-                          selectedRequestType='Urgent';
-                          isUrgent=true;
+                          if(value=='Urgent'){
+                            selectedRequestType='Urgent';
+                            isUrgent=true;
 
-                        }
-                        else{
-                          selectedRequestType='Scheduled';
-                          isUrgent=false;
-                        }
+                          }
+                          else{
+                            selectedRequestType='Scheduled';
+                            isUrgent=false;
+                          }
                         });
                       },
 
@@ -204,19 +203,19 @@ class _RequestFormState extends State<Requestform> {
                   child: TextField(
                     enabled: !isUrgent,
                     decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.grey.shade200,
-                    hintText: 'Donation Date',
-                    enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(12),
+                      filled: true,
+                      fillColor: Colors.grey.shade200,
+                      hintText: 'Donation Date',
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(12),
-                    ),
-                    ),
-                    ),
+                  ),
 
                 ),
                 Padding(
@@ -293,8 +292,8 @@ class _RequestFormState extends State<Requestform> {
                       showDialog(
                         context: context,
                         builder: (context) => CheckoutBlood(
-                           patientName: patientNameController.text,
-                            /*medicalName: medicalNameController.text,
+                          patientName: patientNameController.text,
+                          /*medicalName: medicalNameController.text,
                             phone: phoneController.text,
                             unit: unitController.text,
                             date: dateController.text,
@@ -303,7 +302,7 @@ class _RequestFormState extends State<Requestform> {
                             bloodGroup: selectedBloodGroup,
                             district: selectedDistrict,
                             requestType: selectedRequestType,*/
-                          ),
+                        ),
                       );
                     },
 

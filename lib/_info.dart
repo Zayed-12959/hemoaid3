@@ -58,34 +58,32 @@ class _InfoState extends State<info>{
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(widget.bGroup,style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16
-                          ),),
-                          Row(
+                          Text(widget.bGroup),
 
-                            children: [
-                              IconButton(color: Colors.red.shade400,onPressed: (){}, icon: Icon(Icons.call_outlined)),
+
+
+                               SizedBox(width: 10),IconButton(color: Colors.red.shade400,onPressed: (){}, icon: Icon(Icons.call)),
 
                             ],
                           ),
-                        ],
-                      )
+
+
 
                     ],
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                        ),
-                        onPressed: (){},
-                        child:Text('View Details',style: TextStyle(
-                          color: Colors.black,
-                        ),
+                      Center(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                          ),
+                          onPressed: (){},
+                          child:Text('View Details',style: TextStyle(
+                            color: Colors.black,
+                          ),
+                          ),
                         ),
                       ),
                     ],

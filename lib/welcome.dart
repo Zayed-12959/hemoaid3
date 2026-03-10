@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hemoaid3/DonorDashboard.dart';
-import 'package:hemoaid3/ReceiverDashboard.dart';
-import 'package:hemoaid3/registration.dart';
+import 'package:hemoaid/DonorDashboard.dart';
+import 'package:hemoaid/ReceiverDashboard.dart';
+import 'package:hemoaid/registration.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({super.key});
@@ -57,20 +57,36 @@ class _WelcomeState extends State<Welcome> {
                 ),
               ),
 
+              Positioned(
+                top: MediaQuery.of(context).size.height * 0.1,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Text(
+                    "Welcome!",
+                    style: TextStyle(
+                      fontSize: 48,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
 
               SafeArea(
                 child: Center(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        "Welcome!",
-                        style: TextStyle(
-                          fontSize: 50,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
+                      SizedBox(height: MediaQuery.of(context).size.height * 0.27),
+                      // Text(
+                      //   "Welcome!",
+                      //   style: TextStyle(
+                      //     fontSize: 50,
+                      //     fontWeight: FontWeight.bold,
+                      //     color: Colors.white,
+                      //   ),
+                      // ),
 
                       SizedBox(height: 50),
                       Padding(

@@ -41,14 +41,14 @@ class _AddressScreenState extends State<AddressScreen> {
       body: Stack(
         children: [
 
-          // 🔴 Red background (same as Registration)
+          // Red bg
           Container(
             color: const Color(0xFFD32F2F),
             width: double.infinity,
             height: double.infinity,
           ),
 
-          // ⚪ Curved white bottom (same alignment as Registration)
+          // white bg
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -63,18 +63,18 @@ class _AddressScreenState extends State<AddressScreen> {
             ),
           ),
 
-          // 📊 Progress Bar (Step 2 active)
+          // Progress Bar
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: Row(
-                children: List.generate(4, (index) {
+                children: List.generate(3, (index) {
                   return Expanded(
                     child: Container(
                       height: 4,
                       margin: const EdgeInsets.symmetric(horizontal: 4),
                       decoration: BoxDecoration(
-                        color: index <= 2
+                        color: index <= 1
                             ? Colors.white
                             : Colors.white30,
                         borderRadius: BorderRadius.circular(2),
@@ -86,7 +86,7 @@ class _AddressScreenState extends State<AddressScreen> {
             ),
           ),
 
-          // 🏠 Large Home Icon
+          // Home pic
           Positioned(
             top: 50,
             left: 0,
@@ -115,7 +115,7 @@ class _AddressScreenState extends State<AddressScreen> {
             ),
           ),
 
-          // 📦 Floating Card (same style as Registration)
+          // card
           Positioned(
             top: 180,
             left: 0,
@@ -224,7 +224,7 @@ class _AddressScreenState extends State<AddressScreen> {
     );
   }
 
-  // ── REUSABLE DROPDOWN WIDGET ─────────────────────────────
+  //dropdown
   Widget _buildDropdown({
     required String hint,
     required String? value,
@@ -252,7 +252,7 @@ class _AddressScreenState extends State<AddressScreen> {
     );
   }
 
-  // ── REUSABLE TEXT FIELD WIDGET ───────────────────────────
+  //text-field
   Widget _buildTextField({
     required TextEditingController controller,
     required String hint,
@@ -266,7 +266,7 @@ class _AddressScreenState extends State<AddressScreen> {
         fillColor: Colors.red[50],
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide.none, // no visible border line
+          borderSide: BorderSide.none,
         ),
         contentPadding:
         const EdgeInsets.symmetric(horizontal: 16, vertical: 14),

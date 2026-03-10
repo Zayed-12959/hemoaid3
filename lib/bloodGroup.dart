@@ -35,14 +35,14 @@ class _BloodGroupScreenState extends State<BloodGroupScreen> {
       body: Stack(
         children: [
 
-          // 🔴 Red background
+          //Red bg
           Container(
             color: const Color(0xFFD32F2F),
             width: double.infinity,
             height: double.infinity,
           ),
 
-          // ⚪ White curved bottom
+          // White bg
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -57,12 +57,12 @@ class _BloodGroupScreenState extends State<BloodGroupScreen> {
             ),
           ),
 
-          // 📊 Progress bar (Step 4 active)
+          //Progress bar
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: Row(
-                children: List.generate(4, (index) {
+                children: List.generate(3, (index) {
                   return Expanded(
                     child: Container(
                       height: 4,
@@ -78,7 +78,7 @@ class _BloodGroupScreenState extends State<BloodGroupScreen> {
             ),
           ),
 
-          // 🩸 Large Blood Icon
+          // blood logo
           Positioned(
             top: 50,
             left: 0,
@@ -107,7 +107,7 @@ class _BloodGroupScreenState extends State<BloodGroupScreen> {
             ),
           ),
 
-          // 📦 Card
+          // card
           Positioned(
             top: 180,
             left: 0,
@@ -137,7 +137,7 @@ class _BloodGroupScreenState extends State<BloodGroupScreen> {
 
                       const SizedBox(height: 25),
 
-                      // 🅰️ Blood groups
+                      //blood group
                       GridView.count(
                         shrinkWrap: true,
                         crossAxisCount: 2,
@@ -151,7 +151,7 @@ class _BloodGroupScreenState extends State<BloodGroupScreen> {
 
                       const SizedBox(height: 20),
 
-                      // ➕ ➖ Rh buttons
+                      // +,-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -199,7 +199,7 @@ class _BloodGroupScreenState extends State<BloodGroupScreen> {
     );
   }
 
-  // ── BLOOD GROUP BUTTON ─────────────────────
+  //bg click
   Widget _bloodButton(String group) {
     final bool isSelected = selectedGroup == group;
 
@@ -227,7 +227,7 @@ class _BloodGroupScreenState extends State<BloodGroupScreen> {
     );
   }
 
-  // ── RH BUTTON ──────────────────────────────
+  // +,- click
   Widget _rhButton(String value) {
     final bool isSelected = selectedRh == value;
 

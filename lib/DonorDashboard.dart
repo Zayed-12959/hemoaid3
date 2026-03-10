@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hemoaid3/ReceiverInfo.dart';
+import 'package:hemoaid/ReceiverInfo.dart';
 
 import 'listTile.dart';
 import 'profile_card.dart';

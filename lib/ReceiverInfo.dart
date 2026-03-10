@@ -94,13 +94,13 @@ class _ReceiverInfoState extends State<Receiverinfo>{
                               content: Text('Are you sure you want to accept this blood request?'),
                               actions: [
                                 TextButton(
-                                  onPressed: () => Navigator.pop(context), // close dialog
+                                  onPressed: () => Navigator.pop(context),
                                   child: Text('Cancel', style: TextStyle(color: Colors.grey)),
                                 ),
                                 ElevatedButton(
                                   onPressed: () {
-                                    Navigator.pop(context); // close dialog
-                                    // handle accept logic here
+                                    Navigator.pop(context);
+
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.red,
@@ -128,5 +128,4 @@ class _ReceiverInfoState extends State<Receiverinfo>{
     );
 
   }
-
 }

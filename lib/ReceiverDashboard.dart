@@ -93,7 +93,7 @@ class _ReceiverDashBoardState extends State<Receiverdashboard> {
       ),
       drawer: listTile(username: widget.username, onProfileClick: () {
         setState(() {
-          showProfile = true; // show profile card
+          showProfile = true;
         });
       },),
       body: Column(

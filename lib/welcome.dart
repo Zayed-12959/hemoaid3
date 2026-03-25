@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hemoaid/DonorDashboard.dart';
 import 'package:hemoaid/ReceiverDashboard.dart';
 import 'package:hemoaid/registration.dart';
+import 'appTheme.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({super.key});
@@ -13,286 +14,276 @@ class Welcome extends StatefulWidget {
 class _WelcomeState extends State<Welcome> {
   final TextEditingController _usernameController = TextEditingController();
   bool _snackBarShown = false;
-
   String selectedRole = "";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        // appBar: AppBar(
-        //   toolbarHeight: 100,
-        //   backgroundColor: Color(0xFFD32F2F),
-        //   title: Text("Welcome", style: TextStyle(color: Colors.white, fontSize: 35, fontWeight: FontWeight.bold),),
-        //   centerTitle: true,
-        //   //leading: IconButton(onPressed: () {}, icon: Icon(Icons.person_2_outlined, color: Colors.white,)),
-        //   // actions: [
-        //   //   IconButton(
-        //   //       onPressed: () {},
-        //   //       icon: Icon(Icons.menu_outlined, color: Colors.white,))
-        //   // ],
-        // ),
-        body: Stack(
-            children: [
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: [
 
+          // ── LAYER 1: Gradient background ───────────────
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              gradient: AppTheme.primaryGradient,
+            ),
+          ),
 
-              Container(
-                width: double.infinity,
-                height: double.infinity,
-                color: const Color(0xFFD32F2F),
-              ),
-
-
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: MediaQuery.of(context).size.height * 0.7,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(60),
-                      topRight: Radius.circular(60),
-                    ),
-                  ),
+          // ── LAYER 2: White rounded container at bottom ─
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.7,
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(60),
+                  topRight: Radius.circular(60),
                 ),
               ),
+            ),
+          ),
 
-              Positioned(
-                top: MediaQuery.of(context).size.height * 0.1,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: Text(
-                    "Welcome!",
-                    style: TextStyle(
-                      fontSize: 48,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+          // ── LAYER 3: Logo + HemoAid title ──────────────
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.13,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.asset(
+                      "assets/logo.png",
+                      width: 45,
+                      height: 45,
+                      fit: BoxFit.cover,
                     ),
                   ),
-                ),
+                  SizedBox(width: 12),
+                  Text(
+                    "HemoAid",
+                    style: AppTheme.brandStyle,
+                  ),
+                ],
               ),
+            ),
+          ),
 
-              SafeArea(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.27),
-                      // Text(
-                      //   "Welcome!",
-                      //   style: TextStyle(
-                      //     fontSize: 50,
-                      //     fontWeight: FontWeight.bold,
-                      //     color: Colors.white,
-                      //   ),
-                      // ),
+          // ── LAYER 4: Main content ───────────────────────
+          SafeArea(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
 
-                      SizedBox(height: 50),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.27),
+                  SizedBox(height: 80),
 
-                            ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  selectedRole = "Donor";
-                                  _snackBarShown = false;
-                                });
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                selectedRole == "Donor" ? Color(0xFFD32F2F) : Colors.white,
-                                foregroundColor:
-                                selectedRole == "Donor" ? Colors.white : Color(0xFFD32F2F),
-                                side: BorderSide(color: Color(0xFFD32F2F)),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                              ),
-                              child: Text("Donor"),
+                  // Welcome title
+                  Text("Welcome!", style: AppTheme.welcomeStyle),
+
+                  SizedBox(height: 50),
+
+                  // Subtitle
+                  Text(
+                    "What would you like to be today?",
+                    style: AppTheme.subtitleStyle,
+                  ),
+
+                  // ── DONOR / RECEIVER BUTTONS ────────────
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+
+                        // Donor button
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              selectedRole = "Donor";
+                              _snackBarShown = false;
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: selectedRole == "Donor"
+                                ? AppTheme.primaryRed
+                                : Colors.grey[100],
+                            foregroundColor: selectedRole == "Donor"
+                                ? Colors.grey[100]
+                                : AppTheme.primaryRed,
+                            side: BorderSide(color: AppTheme.primaryRed),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
                             ),
+                          ),
+                          child: Text("Donor"),
+                        ),
 
-                            SizedBox(width: 20),
+                        SizedBox(width: 20),
 
-                            ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  selectedRole = "Receiver";
-                                  _snackBarShown = false;
-                                });
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                selectedRole == "Receiver" ? Color(0xFFD32F2F) : Colors.white,
-                                foregroundColor:
-                                selectedRole == "Receiver" ? Colors.white : Color(0xFFD32F2F),
-                                side: BorderSide(color: Color(0xFFD32F2F)),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                              ),
-                              child: Text("Receiver"),
+                        // Receiver button
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              selectedRole = "Receiver";
+                              _snackBarShown = false;
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: selectedRole == "Receiver"
+                                ? AppTheme.primaryRed
+                                : Colors.grey[100],
+                            foregroundColor: selectedRole == "Receiver"
+                                ? Colors.grey[100]
+                                : AppTheme.primaryRed,
+                            side: BorderSide(color: AppTheme.primaryRed),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
                             ),
-                          ],
+                          ),
+                          child: Text("Receiver"),
                         ),
-                      ),
 
-                      Text(
-                        "Hemo Aid",
-                        style: TextStyle(
-                          fontSize: 45,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFFD32F2F),
-                        ),
+                      ],
+                    ),
+                  ),
+
+                  // ── USERNAME FIELD ──────────────────────
+                  Container(
+                    padding: EdgeInsets.only(
+                        left: 50, right: 50, bottom: 10, top: 40),
+                    child: TextField(
+                      controller: _usernameController,
+                      style: AppTheme.inputStyle,
+                      decoration: InputDecoration(
+                        label: Text("Username", style: AppTheme.labelStyle),
+                        suffixIcon: Icon(Icons.person_2),
+                        enabledBorder: AppTheme.inputBorder,
+                        focusedBorder: AppTheme.inputBorder,
                       ),
-                      Container(
-                        padding: EdgeInsets.only(left: 50, right: 50,bottom: 10,top: 30),
-                        child: TextField(
-                          controller: _usernameController,
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                          decoration: InputDecoration(
-                              label: Text(
-                                "Username",
-                                style: TextStyle(
-                                    color: Colors.black54
-                                ),
-                              ),
-                              suffixIcon: Icon(
-                                  Icons.person_2
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Color(0xFFD32F2F)
-                                  ),
-                                  borderRadius: BorderRadius.all(Radius.circular(40))
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Color(0xFFD32F2F)
-                                  ),
-                                  borderRadius: BorderRadius.all(Radius.circular(40))
-                              )
-                          ),
-                        ),
+                    ),
+                  ),
+
+                  // ── PASSWORD FIELD ──────────────────────
+                  Container(
+                    padding: EdgeInsets.only(left: 50, right: 50, top: 10),
+                    child: TextField(
+                      style: AppTheme.inputStyle,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        label: Text("Password", style: AppTheme.labelStyle),
+                        suffixIcon: Icon(Icons.key_outlined),
+                        enabledBorder: AppTheme.inputBorder,
+                        focusedBorder: AppTheme.inputBorder,
                       ),
-                      Container(
-                        padding: EdgeInsets.only(left: 50, right: 50),
-                        child: TextField(
-                          style: TextStyle(
-                            color: Colors.black,
+                    ),
+                  ),
+
+                  // ── LOG IN BUTTON ───────────────────────
+                  Container(
+                    padding: EdgeInsets.only(top: 30),
+                    width: 120,
+                    height: 70,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: AppTheme.primaryGradient,
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 6,
+                            offset: Offset(0, 3),
                           ),
-                          obscureText: true,
-                          decoration: InputDecoration(
-                              label: Text(
-                                "Password",
-                                style: TextStyle(
-                                    color: Colors.black54
-                                ),
-                              ),
-                              suffixIcon: Icon(
-                                  Icons.key_outlined
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Color(0xFFD32F2F)
-                                  ),
-                                  borderRadius: BorderRadius.all(Radius.circular(40))
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Color(0xFFD32F2F)
-                                  ),
-                                  borderRadius: BorderRadius.all(Radius.circular(40))
-                              )
-                          ),
-                        ),
+                        ],
                       ),
-                      Container(
-                        padding: EdgeInsets.only(top: 30),
-                        child: ElevatedButton(onPressed: () {
-                          if(selectedRole == "Receiver"){
-                            Navigator.push(context, MaterialPageRoute(
-                                builder: (context) => Receiverdashboard(username: _usernameController.text)
-                            )
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (selectedRole == "Receiver") {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Receiverdashboard(
+                                    username: _usernameController.text),
+                              ),
                             );
-                          }
-                  else if(selectedRole == "Donor"){
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => Donordashboard(username: _usernameController.text)
-                    )
-                    );
-                  }
-                          else {
+                          } else if (selectedRole == "Donor") {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Donordashboard(
+                                    username: _usernameController.text),
+                              ),
+                            );
+                          } else {
                             if (!_snackBarShown) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content: Text("Please select Donor or Receiver"),
+                                  content: Text(
+                                      "Please select Donor or Receiver"),
                                 ),
                               );
                               _snackBarShown = true;
                             }
                           }
-
                         },
-                            style: ElevatedButton.styleFrom(
-                                elevation: 10,
-                                backgroundColor: Color(0xFFD32F2F),
-                                fixedSize: Size(100,20)
-                            ),
-
-                            child: Text("Log in", style: TextStyle(color: Colors.white),)),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(top: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Don't have an account? ",
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.black,
-                              ),
-                            ),
-
-                            MouseRegion(
-                              cursor: SystemMouseCursors.click,
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Registration(),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  "Sign Up",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.bold,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: Colors.blue,
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                          ],
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
                         ),
-                      )
-                    ],
+                        child: Text("Log in", style: AppTheme.buttonStyle),
+                      ),
+                    ),
                   ),
-                ),
+
+                  // ── DON'T HAVE AN ACCOUNT ───────────────
+                  Container(
+                    padding: EdgeInsets.only(top: 80),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Don't have an account? ",
+                          style: AppTheme.labelStyle,
+                        ),
+                        MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Registration(),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              "Sign Up",
+                              style: AppTheme.signUpStyle,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                ],
               ),
-            ]
-        )
+            ),
+          ),
+
+        ],
+      ),
     );
   }
 }

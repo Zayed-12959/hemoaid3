@@ -1,44 +1,71 @@
 import 'package:flutter/material.dart';
-import 'package:hemoaid/address.dart';
+import 'package:hemoaid/ReceiverDashboard.dart';
+import 'appTheme.dart';
 
-import 'address.dart';
+class Registration extends StatefulWidget {
+  Registration({super.key});
 
-class Registration extends StatelessWidget {
-  final TextEditingController _usernameController = TextEditingController();
+  @override
+  State<Registration> createState() => _RegistrationState();
+}
 
-  Registration ({super.key});
+class _RegistrationState extends State<Registration> {
+
+  // ── PERSONAL INFO CONTROLLERS ──────────────────────────
+  final TextEditingController _usernameController  = TextEditingController();
+  final TextEditingController _emailController     = TextEditingController();
+  final TextEditingController _passwordController  = TextEditingController();
+  final TextEditingController _phoneController     = TextEditingController();
+  final TextEditingController _nidController       = TextEditingController();
+
+  // ── BLOOD GROUP VARIABLES ──────────────────────────────
+  String? selectedBloodGroup;
+  final List<String> bloodGroups = [
+    'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+
+      // ── APP BAR ─────────────────────────────────────────
       appBar: AppBar(
-        backgroundColor: Color(0xFFD32F2F),
-        title: Text("Register Your Account", style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        shadowColor: Colors.transparent,
         centerTitle: true,
-        leading: IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.arrow_back, color: Colors.white,)),
-        // actions: [
-        //   IconButton(
-        //       onPressed: () {},
-        //       icon: Icon(Icons.menu_outlined, color: Colors.white,))
-        // ],
+        title: Text("Register Your Account", style: AppTheme.appBarStyle),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: AppTheme.primaryGradient,
+          ),
+        ),
       ),
-      body:
-      Stack(
+
+      body: Stack(
         children: [
+
+          // ── LAYER 1: Gradient background ───────────────
           Container(
-            color: const Color(0xFFD32F2F),
             width: double.infinity,
             height: double.infinity,
+            decoration: BoxDecoration(
+              gradient: AppTheme.primaryGradient,
+            ),
           ),
 
-          // white bg
+          // ── LAYER 2: White rounded container at bottom ─
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               height: MediaQuery.of(context).size.height * 0.55,
-              decoration: const BoxDecoration(
-                color: Colors.white,
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(60),
                   topRight: Radius.circular(60),
@@ -47,41 +74,19 @@ class Registration extends StatelessWidget {
             ),
           ),
 
-          // Progress Bar
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Row(
-                children: List.generate(3, (index) {
-                  return Expanded(
-                    child: Container(
-                      height: 4,
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      decoration: BoxDecoration(
-                        color: index == 0
-                            ? Colors.white
-                            : Colors.white30,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                  );
-                }),
-              ),
-            ),
-          ),
-
+          // ── LAYER 3: Profile photo icon ─────────────────
           Positioned(
-            top: 50,
+            top: MediaQuery.of(context).size.height * 0.035,
             left: 0,
             right: 0,
             child: Center(
               child: Container(
-                width: 100,
-                height: 100,
+                width: 115,
+                height: 115,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(25),
-                  boxShadow: [
+                  borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.black12,
                       blurRadius: 10,
@@ -89,220 +94,272 @@ class Registration extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: const Icon(
-                  Icons.add_a_photo_rounded,
-                  size: 55,
-                  color: Color(0xFFD32F2F),
+                child: Icon(
+                  Icons.person_add_alt_1_rounded,
+                  size: 80,
+                  color: AppTheme.primaryRed,
                 ),
               ),
             ),
           ),
+
+          // ── LAYER 4: Scrollable card ─────────────────────
           Positioned(
-            top: 180,
+            top: MediaQuery.of(context).size.height * 0.2,
             left: 0,
             right: 0,
-          child: SizedBox(
-            height: 500,
+            bottom: 50,
             child: Card(
               elevation: 12,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25),
+                borderRadius: BorderRadius.circular(AppTheme.cardRadius),
               ),
               margin: const EdgeInsets.symmetric(horizontal: 25),
-              child: Padding(
+              child: SingleChildScrollView(
                 padding: const EdgeInsets.all(25),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      "Sign Up",
-                      style: TextStyle(
-                        fontSize: 45,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFFD32F2F),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 50, right: 50,bottom: 10,top: 30),
-                      child: TextField(
 
-                        controller: _usernameController,
-                        style: TextStyle(
-                          color: Colors.black,
+                    // ── SIGN UP TITLE ──────────────────────
+                    Text("Sign Up", style: AppTheme.titleStyle),
+                    const SizedBox(height: 20),
+
+                    // ── USERNAME ───────────────────────────
+                    _buildTextField(
+                      controller: _usernameController,
+                      hint: 'Username',
+                      icon: Icons.person,
+                    ),
+                    const SizedBox(height: 15),
+
+                    // ── EMAIL ──────────────────────────────
+                    _buildTextField(
+                      controller: _emailController,
+                      hint: 'Email',
+                      icon: Icons.mail,
+                    ),
+                    const SizedBox(height: 15),
+
+                    // ── PASSWORD ───────────────────────────
+                    _buildTextField(
+                      controller: _passwordController,
+                      hint: 'Password',
+                      icon: Icons.key_outlined,
+                      obscure: true,
+                    ),
+                    const SizedBox(height: 15),
+
+                    // ── PHONE NUMBER ───────────────────────
+                    _buildTextField(
+                      controller: _phoneController,
+                      hint: 'Phone Number',
+                      icon: Icons.phone_enabled,
+                    ),
+                    const SizedBox(height: 15),
+
+                    // ── NID NUMBER ─────────────────────────
+                    _buildTextField(
+                      controller: _nidController,
+                      hint: 'NID Number',
+                      icon: Icons.credit_card,
+                    ),
+                    const SizedBox(height: 20),
+
+                    // ── ADDRESS (expandable) ───────────────
+                    TextField(
+                      maxLines: null,
+                      maxLength: 150,
+                      style: AppTheme.inputStyle,
+                      decoration: InputDecoration(
+                        hintText: 'Enter your current address',
+                        hintStyle: AppTheme.hintStyle,
+                        filled: true,
+                        fillColor: Colors.red[50],
+                        suffixIcon: const Icon(Icons.home),
+                        counterStyle: AppTheme.hintStyle,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: AppTheme.primaryRed),
                         ),
-                        decoration: InputDecoration(
-                            label: Text(
-                              "Username",
-                              style: TextStyle(
-                                  color: Colors.black54
-                              ),
-                            ),
-                            suffixIcon: Icon(
-                                Icons.person_2
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xFFD32F2F)
-                                ),
-                                borderRadius: BorderRadius.all(Radius.circular(40))
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xFFD32F2F)
-                                ),
-                                borderRadius: BorderRadius.all(Radius.circular(40))
-                            )
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: AppTheme.primaryRed),
                         ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 14),
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.only(left: 50, right: 50,bottom: 10),
-                      child: TextField(
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                        decoration: InputDecoration(
-                            label: Text(
-                              "Email",
-                              style: TextStyle(
-                                  color: Colors.black54
+                    const SizedBox(height: 15),
+
+                    // ── BLOOD GROUP SELECTOR ───────────────
+                    GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20),
+                            ),
+                          ),
+                          builder: (context) {
+                            return SizedBox(
+                              height: 220,
+                              child: Column(
+                                children: [
+
+                                  // drag handle
+                                  Container(
+                                    margin: const EdgeInsets.only(
+                                        top: 12, bottom: 8),
+                                    width: 40,
+                                    height: 4,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                  ),
+
+                                  // scrollable list
+                                  Expanded(
+                                    child: ListView.builder(
+                                      itemCount: bloodGroups.length,
+                                      itemBuilder: (context, index) {
+                                        final item = bloodGroups[index];
+                                        final bool isSelected =
+                                            selectedBloodGroup == item;
+                                        return ListTile(
+                                          title: Text(
+                                            item,
+                                            style: isSelected
+                                                ? AppTheme.inputStyle.copyWith(
+                                              color: AppTheme.primaryRed,
+                                              fontWeight: FontWeight.bold,
+                                            )
+                                                : AppTheme.inputStyle,
+                                          ),
+                                          trailing: isSelected
+                                              ? Icon(Icons.check,
+                                              color: AppTheme.primaryRed)
+                                              : null,
+                                          onTap: () {
+                                            setState(() =>
+                                            selectedBloodGroup = item);
+                                            Navigator.pop(context);
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            suffixIcon: Icon(
-                                Icons.mail_outline
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xFFD32F2F)
-                                ),
-                                borderRadius: BorderRadius.all(Radius.circular(40))
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xFFD32F2F)
-                                ),
-                                borderRadius: BorderRadius.all(Radius.circular(40))
-                            )
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 50, right: 50, bottom: 10),
-                      child: TextField(
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                        obscureText: true,
-                        decoration: InputDecoration(
-                            label: Text(
-                              "Password",
-                              style: TextStyle(
-                                  color: Colors.black54
-                              ),
-                            ),
-                            suffixIcon: Icon(
-                                Icons.key_outlined
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xFFD32F2F)
-                                ),
-                                borderRadius: BorderRadius.all(Radius.circular(40))
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xFFD32F2F)
-                                ),
-                                borderRadius: BorderRadius.all(Radius.circular(40))
-                            )
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 50, right: 50, bottom: 10),
-                      child: TextField(
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                        decoration: InputDecoration(
-                            label: Text(
-                              "Phone Number",
-                              style: TextStyle(
-                                  color: Colors.black54
-                              ),
-                            ),
-                            suffixIcon: Icon(
-                                Icons.phone_enabled
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xFFD32F2F)
-                                ),
-                                borderRadius: BorderRadius.all(Radius.circular(40))
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xFFD32F2F)
-                                ),
-                                borderRadius: BorderRadius.all(Radius.circular(40))
-                            )
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 50, right: 50, bottom: 10),
-                      child: TextField(
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                        decoration: InputDecoration(
-                            label: Text(
-                              "NID Number",
-                              style: TextStyle(
-                                  color: Colors.black54
-                              ),
-                            ),
-                            suffixIcon: Icon(
-                                Icons.credit_card
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xFFD32F2F)
-                                ),
-                                borderRadius: BorderRadius.all(Radius.circular(40))
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xFFD32F2F)
-                                ),
-                                borderRadius: BorderRadius.all(Radius.circular(40))
-                            )
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(top: 30),
-                      child: ElevatedButton(onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => AddressScreen()
-                        )
+                            );
+                          },
                         );
                       },
-                          style: ButtonStyle(
-                              elevation: WidgetStatePropertyAll(10),
-                              backgroundColor: WidgetStatePropertyAll(Color(0xFFD32F2F)),
-                              fixedSize: WidgetStatePropertyAll(Size(100,20))
-                          ),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 14),
+                        decoration: BoxDecoration(
+                          color: Colors.red[50],
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: AppTheme.primaryRed),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              selectedBloodGroup ?? 'Select Blood Group',
+                              style: selectedBloodGroup != null
+                                  ? AppTheme.inputStyle
+                                  : AppTheme.hintStyle,
+                            ),
+                            Icon(Icons.keyboard_arrow_down,
+                                color: AppTheme.labelText),
+                          ],
+                        ),
+                      ),
+                    ),
 
-                          child: Text("Next", style: TextStyle(color: Colors.white),)),
-                    )
+                    const SizedBox(height: 30),
+
+                    // ── FINISH BUTTON ──────────────────────
+                    Container(
+                      width: double.infinity,
+                      height: 45,
+                      decoration: BoxDecoration(
+                        gradient: AppTheme.primaryGradient,
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 6,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  Receiverdashboard(username: ''),
+                            ),
+                          );
+                        },
+                        child: Text('Finish', style: AppTheme.buttonStyle),
+                      ),
+                    ),
+
                   ],
                 ),
               ),
             ),
           ),
+
+        ],
+      ),
+    );
+  }
+
+  // ── REUSABLE TEXT FIELD ──────────────────────────────────
+  // All 5 personal info fields are identical except for
+  // hint, icon, and obscureText — so we extract them into
+  // one function to avoid repeating the same 15 lines 5 times
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hint,
+    required IconData icon,
+    bool obscure = false,
+  }) {
+    return TextField(
+      controller: controller,
+      style: AppTheme.inputStyle,
+      obscureText: obscure,
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: AppTheme.hintStyle,
+        suffixIcon: Icon(icon),
+        filled: true,
+        fillColor: Colors.red[50],
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: AppTheme.primaryRed),
         ),
-        ]
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: AppTheme.primaryRed),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16, vertical: 14),
       ),
     );
   }

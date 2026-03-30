@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hemoaid/DonorDashboard.dart';
-import 'package:hemoaid/ReceiverDashboard.dart';
-import 'package:hemoaid/registration.dart';
+import 'package:hemoaid3/DonorDashboard.dart';
+import 'package:hemoaid3/ReceiverDashboard.dart';
+import 'package:hemoaid3/registration.dart';
 import 'appTheme.dart';
 
 class Welcome extends StatefulWidget {
@@ -210,7 +210,7 @@ class _WelcomeState extends State<Welcome> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => Receiverdashboard(
+                                builder: (context) => ReceiverDashboard(
                                     username: _usernameController.text),
                               ),
                             );

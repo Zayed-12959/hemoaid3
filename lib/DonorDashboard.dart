@@ -246,7 +246,8 @@
 // }
 
 import 'package:flutter/material.dart';
-import 'package:hemoaid/ReceiverInfo.dart';
+import 'package:hemoaid3/ReceiverInfo.dart';
+import 'ProfilePage.dart';
 import 'appTheme.dart';
 import 'listTile.dart';
 import 'profile_card.dart';
@@ -320,9 +321,13 @@ class _DonorDashBoardState extends State<Donordashboard> {
       drawer: listTile(
         username: widget.username,
         onProfileClick: () {
-          setState(() {
-            showProfile = true;
-          });
+          Navigator.pop(context); // close drawer first
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProfilePage(username: widget.username),
+            ),
+          );
         },
       ),
 

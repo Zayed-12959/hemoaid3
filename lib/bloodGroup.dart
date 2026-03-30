@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hemoaid/ReceiverDashboard.dart';
-import 'package:hemoaid/welcome.dart';
+import 'package:hemoaid3/ReceiverDashboard.dart';
+import 'package:hemoaid3/welcome.dart';
 import 'registration.dart';
 
 class BloodGroupScreen extends StatefulWidget {

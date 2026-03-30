@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hemoaid/splashScreen.dart';
-import 'package:hemoaid/welcome.dart';
+import 'package:hemoaid3/splashScreen.dart';
+import 'package:hemoaid3/welcome.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {

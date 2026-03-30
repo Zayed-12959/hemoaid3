@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hemoaid/ReceiverDashboard.dart';
+import 'package:hemoaid3/ReceiverDashboard.dart';
 import 'appTheme.dart';
 
 class Registration extends StatefulWidget {
@@ -311,7 +311,7 @@ class _RegistrationState extends State<Registration> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  Receiverdashboard(username: ''),
+                                  ReceiverDashboard(username: ''),
                             ),
                           );
                         },

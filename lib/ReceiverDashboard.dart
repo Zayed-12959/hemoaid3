@@ -232,23 +232,22 @@
 //   }
 // }
 import 'package:flutter/material.dart';
-import 'ProfilePage.dart';
 import 'RequestForm.dart';
 import 'listTile.dart';
 import 'appTheme.dart';
 import '_info.dart';
 import 'profile_card.dart';
 
-class ReceiverDashboard extends StatefulWidget {
+class Receiverdashboard extends StatefulWidget {
   final String username;
 
-  const ReceiverDashboard({super.key, required this.username});
+  const Receiverdashboard({super.key, required this.username});
 
   @override
   State<StatefulWidget> createState() => _ReceiverDashBoardState();
 }
 
-class _ReceiverDashBoardState extends State<ReceiverDashboard> {
+class _ReceiverDashBoardState extends State<Receiverdashboard> {
   bool showProfile = false;
 
   final List donors = [
@@ -333,13 +332,9 @@ class _ReceiverDashBoardState extends State<ReceiverDashboard> {
       drawer: listTile(
         username: widget.username,
         onProfileClick: () {
-          Navigator.pop(context); // close drawer first
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ProfilePage(username: widget.username),
-            ),
-          );
+          setState(() {
+            showProfile = true;
+          });
         },
       ),
 
@@ -562,7 +557,7 @@ class _ReceiverDashBoardState extends State<ReceiverDashboard> {
           } else if (index == 1) {
             showDialog(
               context: context,
-              builder: (context) => Requestform(username: widget.username,),
+              builder: (context) => Requestform(),
             );
           }
         },

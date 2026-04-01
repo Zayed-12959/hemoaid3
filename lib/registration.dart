@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hemoaid3/ReceiverDashboard.dart';
+import 'package:hemoaid/ReceiverDashboard.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'appTheme.dart';
+import 'welcome.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Registration extends StatefulWidget {
   Registration({super.key});
@@ -11,18 +14,173 @@ class Registration extends StatefulWidget {
 
 class _RegistrationState extends State<Registration> {
 
+  // FirebaseAuth.instance is like a singleton in C++
+// one global object that handles all auth operations
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+// tracks if the app is busy registering
+// used to show a loading spinner on the button
+  bool _isLoading = false;
+
   // ── PERSONAL INFO CONTROLLERS ──────────────────────────
   final TextEditingController _usernameController  = TextEditingController();
   final TextEditingController _emailController     = TextEditingController();
   final TextEditingController _passwordController  = TextEditingController();
   final TextEditingController _phoneController     = TextEditingController();
   final TextEditingController _nidController       = TextEditingController();
+  final TextEditingController _addressController   = TextEditingController();
 
   // ── BLOOD GROUP VARIABLES ──────────────────────────────
   String? selectedBloodGroup;
   final List<String> bloodGroups = [
     'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'
   ];
+
+  // ── REGISTER FUNCTION ──────────────────────────────────
+  // Future<void> _register() async {
+  //   // check all fields are filled before trying
+  //   if (_usernameController.text.isEmpty ||
+  //       _emailController.text.isEmpty ||
+  //       _passwordController.text.isEmpty ||
+  //       _phoneController.text.isEmpty ||
+  //       _nidController.text.isEmpty ||
+  //       selectedBloodGroup == null) {
+  //
+  //     // show a snackbar if anything is empty
+  //     // like a simple error popup in C++
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text('Please fill in all fields'),
+  //         backgroundColor: Colors.red,
+  //       ),
+  //     );
+  //     return; // stop here, don't proceed
+  //   }
+  //
+  //   // show loading spinner on button
+  //   setState(() => _isLoading = true);
+  //
+  //   try {
+  //     // createUserWithEmailAndPassword sends the email
+  //     // and password to Firebase and creates an account
+  //     // like calling an async API in C++:
+  //     //   auto result = await api.createUser(email, password);
+  //     await _auth.createUserWithEmailAndPassword(
+  //       email: _emailController.text.trim(),
+  //       password: _passwordController.text.trim(),
+  //     );
+  //
+  //     // after successful registration, navigate to Welcome
+  //     // and remove all previous screens from the stack
+  //     Navigator.pushAndRemoveUntil(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => Welcome()),
+  //           (route) => false,
+  //     );
+  //
+  //   } on FirebaseAuthException catch (e) {
+  //     // FirebaseAuthException gives us specific error codes
+  //     // like catching a specific exception type in C++:
+  //     //   catch (FirebaseAuthException& e) { ... }
+  //
+  //     String message = 'Something went wrong';
+  //
+  //     if (e.code == 'email-already-in-use') {
+  //       message = 'This email is already registered';
+  //     } else if (e.code == 'weak-password') {
+  //       message = 'Password must be at least 6 characters';
+  //     } else if (e.code == 'invalid-email') {
+  //       message = 'Please enter a valid email address';
+  //     }
+  //
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text(message),
+  //         backgroundColor: Colors.red,
+  //       ),
+  //     );
+  //
+  //   } finally {
+  //     // finally always runs whether success or error
+  //     // like a destructor in C++ — cleanup code
+  //     setState(() => _isLoading = false);
+  //   }
+  // }
+
+  Future<void> _register() async {
+    if (_usernameController.text.isEmpty ||
+        _emailController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
+        _phoneController.text.isEmpty ||
+        _nidController.text.isEmpty ||
+        selectedBloodGroup == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill in all fields'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      // Step 1: create Firebase Auth account
+      UserCredential userCredential =
+      await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      // Step 2: save extra data to Firestore
+      // userCredential.user!.uid is the unique ID Firebase
+      // gives every user — like a primary key in C++
+      // We use it as the document ID so we can find this
+      // user's data later
+      await _firestore
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .set({
+        'username':   _usernameController.text.trim(),
+        'email':      _emailController.text.trim(),
+        'phone':      _phoneController.text.trim(),
+        'nid':        _nidController.text.trim(),
+        'bloodGroup': selectedBloodGroup,
+        'address':    _addressController.text.trim(),
+        'createdAt':  FieldValue.serverTimestamp(),
+      });
+
+      // Step 3: navigate to Welcome after success
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => Welcome()),
+            (route) => false,
+      );
+
+    } on FirebaseAuthException catch (e) {
+      String message = 'Something went wrong';
+
+      if (e.code == 'email-already-in-use') {
+        message = 'This email is already registered';
+      } else if (e.code == 'weak-password') {
+        message = 'Password must be at least 6 characters';
+      } else if (e.code == 'invalid-email') {
+        message = 'Please enter a valid email address';
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.red,
+        ),
+      );
+
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,6 +326,7 @@ class _RegistrationState extends State<Registration> {
 
                     // ── ADDRESS (expandable) ───────────────
                     TextField(
+                      controller: _addressController,
                       maxLines: null,
                       maxLength: 150,
                       style: AppTheme.inputStyle,
@@ -283,7 +442,7 @@ class _RegistrationState extends State<Registration> {
 
                     const SizedBox(height: 30),
 
-                    // ── FINISH BUTTON ──────────────────────
+// ── FINISH BUTTON ──────────────────────────────────────
                     Container(
                       width: double.infinity,
                       height: 45,
@@ -306,19 +465,26 @@ class _RegistrationState extends State<Registration> {
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ReceiverDashboard(username: ''),
-                            ),
-                          );
-                        },
-                        child: Text('Finish', style: AppTheme.buttonStyle),
+                        onPressed: _isLoading ? null : _register,
+                        // _isLoading ? null : _register means:
+                        // if loading → disable button (null)
+                        // if not loading → call _register function
+                        // like a conditional function pointer in C++
+
+                        child: _isLoading
+                            ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                            : Text('Finish', style: AppTheme.buttonStyle),
+                        // shows a spinner while loading
+                        // shows "Finish" text when not loading
                       ),
                     ),
-
                   ],
                 ),
               ),

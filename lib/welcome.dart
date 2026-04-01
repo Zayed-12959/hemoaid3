@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hemoaid3/DonorDashboard.dart';
-import 'package:hemoaid3/ReceiverDashboard.dart';
-import 'package:hemoaid3/registration.dart';
+import 'package:hemoaid/DonorDashboard.dart';
+import 'package:hemoaid/ReceiverDashboard.dart';
+import 'package:hemoaid/registration.dart';
 import 'appTheme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({super.key});
@@ -12,10 +14,188 @@ class Welcome extends StatefulWidget {
 }
 
 class _WelcomeState extends State<Welcome> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final TextEditingController _usernameController = TextEditingController();
   bool _snackBarShown = false;
   String selectedRole = "";
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool _isLoading = false;
+  // ← add this line
+  final TextEditingController _passwordController = TextEditingController();
 
+  // ── LOGIN FUNCTION ─────────────────────────────────────
+  // Future<void> _login() async {
+  //   // check fields are not empty
+  //   if (_usernameController.text.isEmpty) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text('Please enter your email'),
+  //         backgroundColor: Colors.red,
+  //       ),
+  //     );
+  //     return;
+  //   }
+  //
+  //   if (selectedRole.isEmpty) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text('Please select Donor or Receiver'),
+  //         backgroundColor: Colors.red,
+  //       ),
+  //     );
+  //     _snackBarShown = true;
+  //     return;
+  //   }
+  //
+  //   setState(() => _isLoading = true);
+  //
+  //   try {
+  //     // signInWithEmailAndPassword checks the email and
+  //     // password against Firebase — like calling a login
+  //     // API endpoint in C++
+  //     await _auth.signInWithEmailAndPassword(
+  //       email: _usernameController.text.trim(),
+  //       password: _passwordController.text.trim(),
+  //     );
+  //
+  //     // navigate based on selected role — logic unchanged
+  //     if (selectedRole == "Receiver") {
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => Receiverdashboard(
+  //             username: _usernameController.text,
+  //           ),
+  //         ),
+  //       );
+  //     } else if (selectedRole == "Donor") {
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => Donordashboard(
+  //             username: _usernameController.text,
+  //           ),
+  //         ),
+  //       );
+  //     }
+  //
+  //   } on FirebaseAuthException catch (e) {
+  //     String message = 'Something went wrong';
+  //
+  //     if (e.code == 'user-not-found') {
+  //       message = 'No account found with this email';
+  //     } else if (e.code == 'wrong-password') {
+  //       message = 'Incorrect password';
+  //     } else if (e.code == 'invalid-email') {
+  //       message = 'Please enter a valid email address';
+  //     } else if (e.code == 'invalid-credential') {
+  //       message = 'Incorrect email or password';
+  //     }
+  //
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text(message),
+  //         backgroundColor: Colors.red,
+  //       ),
+  //     );
+  //
+  //   } finally {
+  //     setState(() => _isLoading = false);
+  //   }
+  // }
+  Future<void> _login() async {
+    if (_usernameController.text.isEmpty ||
+        _passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter your email and password'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (selectedRole.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select Donor or Receiver'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      // Step 1: sign in with Firebase Auth
+      UserCredential userCredential =
+      await _auth.signInWithEmailAndPassword(
+        email: _usernameController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      // Step 2: fetch username from Firestore
+      // so dashboard shows "Soaib" not "soaib@email.com"
+      DocumentSnapshot userDoc = await _firestore
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .get();
+
+      String username = userDoc['username'];
+
+      // Step 3: navigate based on selected role
+      // role is still chosen at login — unchanged logic
+      if (selectedRole == "Receiver") {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Receiverdashboard(username: username),
+          ),
+        );
+      } else if (selectedRole == "Donor") {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Donordashboard(username: username),
+          ),
+        );
+      }
+
+    } on FirebaseAuthException catch (e) {
+      String message = 'Something went wrong';
+
+      if (e.code == 'user-not-found') {
+        message = 'No account found with this email';
+      } else if (e.code == 'wrong-password') {
+        message = 'Incorrect password';
+      } else if (e.code == 'invalid-email') {
+        message = 'Please enter a valid email address';
+      } else if (e.code == 'invalid-credential') {
+        message = 'Incorrect email or password';
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+    catch (e) {
+      // this catches ANY other error including
+      // Firestore document not found errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -164,7 +344,7 @@ class _WelcomeState extends State<Welcome> {
                       controller: _usernameController,
                       style: AppTheme.inputStyle,
                       decoration: InputDecoration(
-                        label: Text("Username", style: AppTheme.labelStyle),
+                        label: Text("Email", style: AppTheme.labelStyle),
                         suffixIcon: Icon(Icons.person_2),
                         enabledBorder: AppTheme.inputBorder,
                         focusedBorder: AppTheme.inputBorder,
@@ -176,6 +356,7 @@ class _WelcomeState extends State<Welcome> {
                   Container(
                     padding: EdgeInsets.only(left: 50, right: 50, top: 10),
                     child: TextField(
+                      controller: _passwordController,
                       style: AppTheme.inputStyle,
                       obscureText: true,
                       decoration: InputDecoration(
@@ -205,35 +386,8 @@ class _WelcomeState extends State<Welcome> {
                         ],
                       ),
                       child: ElevatedButton(
-                        onPressed: () {
-                          if (selectedRole == "Receiver") {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ReceiverDashboard(
-                                    username: _usernameController.text),
-                              ),
-                            );
-                          } else if (selectedRole == "Donor") {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Donordashboard(
-                                    username: _usernameController.text),
-                              ),
-                            );
-                          } else {
-                            if (!_snackBarShown) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      "Please select Donor or Receiver"),
-                                ),
-                              );
-                              _snackBarShown = true;
-                            }
-                          }
-                        },
+                        onPressed: _isLoading ? null : _login,
+                        // ↑ replaces your entire if/else login logic
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent,
@@ -241,7 +395,16 @@ class _WelcomeState extends State<Welcome> {
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
-                        child: Text("Log in", style: AppTheme.buttonStyle),
+                        child: _isLoading
+                            ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                            : Text("Log in", style: AppTheme.buttonStyle),
                       ),
                     ),
                   ),

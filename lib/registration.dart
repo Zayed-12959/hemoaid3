@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hemoaid3/ReceiverDashboard.dart';
+import 'package:hemoaid/ReceiverDashboard.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'appTheme.dart';
+import 'welcome.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Registration extends StatefulWidget {
   Registration({super.key});
@@ -11,25 +14,105 @@ class Registration extends StatefulWidget {
 
 class _RegistrationState extends State<Registration> {
 
-  // ── PERSONAL INFO CONTROLLERS ──────────────────────────
+  // FirebaseAuth.instance is like a singleton in C++
+  // one global object that handles all auth operations
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // tracks if the app is busy registering
+  // used to show a loading spinner on the button
+  bool _isLoading = false;
+
+  //PERSONAL INFO
   final TextEditingController _usernameController  = TextEditingController();
   final TextEditingController _emailController     = TextEditingController();
   final TextEditingController _passwordController  = TextEditingController();
   final TextEditingController _phoneController     = TextEditingController();
   final TextEditingController _nidController       = TextEditingController();
+  final TextEditingController _addressController   = TextEditingController();
 
-  // ── BLOOD GROUP VARIABLES ──────────────────────────────
+  //BLOOD GROUP VARIABLES
   String? selectedBloodGroup;
   final List<String> bloodGroups = [
     'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'
   ];
+  Future<void> _register() async {
+    if (_usernameController.text.isEmpty ||
+        _emailController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
+        _phoneController.text.isEmpty ||
+        _nidController.text.isEmpty ||
+        selectedBloodGroup == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill in all fields'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      // this creates a Firebase Auth account
+      UserCredential userCredential =
+      await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      // this saves extra data to Firestore
+      // userCredential.user!.uid is the unique ID Firebase that gives every user
+      await _firestore
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .set({
+        'username':   _usernameController.text.trim(),
+        'email':      _emailController.text.trim(),
+        'phone':      _phoneController.text.trim(),
+        'nid':        _nidController.text.trim(),
+        'bloodGroup': selectedBloodGroup,
+        'address':    _addressController.text.trim(),
+        'createdAt':  FieldValue.serverTimestamp(),
+      });
+
+      // this navigates to Welcome after success
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => Welcome()),
+            (route) => false,
+      );
+
+    } on FirebaseAuthException catch (e) {
+      String message = 'Something went wrong';
+
+      if (e.code == 'email-already-in-use') {
+        message = 'This email is already registered';
+      } else if (e.code == 'weak-password') {
+        message = 'Password must be at least 6 characters';
+      } else if (e.code == 'invalid-email') {
+        message = 'Please enter a valid email address';
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.red,
+        ),
+      );
+
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      // ── APP BAR ─────────────────────────────────────────
+      // APP BAR
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -49,8 +132,6 @@ class _RegistrationState extends State<Registration> {
 
       body: Stack(
         children: [
-
-          // ── LAYER 1: Gradient background ───────────────
           Container(
             width: double.infinity,
             height: double.infinity,
@@ -58,8 +139,6 @@ class _RegistrationState extends State<Registration> {
               gradient: AppTheme.primaryGradient,
             ),
           ),
-
-          // ── LAYER 2: White rounded container at bottom ─
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -73,8 +152,6 @@ class _RegistrationState extends State<Registration> {
               ),
             ),
           ),
-
-          // ── LAYER 3: Profile photo icon ─────────────────
           Positioned(
             top: MediaQuery.of(context).size.height * 0.035,
             left: 0,
@@ -102,8 +179,6 @@ class _RegistrationState extends State<Registration> {
               ),
             ),
           ),
-
-          // ── LAYER 4: Scrollable card ─────────────────────
           Positioned(
             top: MediaQuery.of(context).size.height * 0.2,
             left: 0,
@@ -121,11 +196,11 @@ class _RegistrationState extends State<Registration> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
 
-                    // ── SIGN UP TITLE ──────────────────────
+                    //SIGN UP
                     Text("Sign Up", style: AppTheme.titleStyle),
                     const SizedBox(height: 20),
 
-                    // ── USERNAME ───────────────────────────
+                    //USERNAME
                     _buildTextField(
                       controller: _usernameController,
                       hint: 'Username',
@@ -133,7 +208,6 @@ class _RegistrationState extends State<Registration> {
                     ),
                     const SizedBox(height: 15),
 
-                    // ── EMAIL ──────────────────────────────
                     _buildTextField(
                       controller: _emailController,
                       hint: 'Email',
@@ -141,7 +215,6 @@ class _RegistrationState extends State<Registration> {
                     ),
                     const SizedBox(height: 15),
 
-                    // ── PASSWORD ───────────────────────────
                     _buildTextField(
                       controller: _passwordController,
                       hint: 'Password',
@@ -150,7 +223,6 @@ class _RegistrationState extends State<Registration> {
                     ),
                     const SizedBox(height: 15),
 
-                    // ── PHONE NUMBER ───────────────────────
                     _buildTextField(
                       controller: _phoneController,
                       hint: 'Phone Number',
@@ -158,16 +230,15 @@ class _RegistrationState extends State<Registration> {
                     ),
                     const SizedBox(height: 15),
 
-                    // ── NID NUMBER ─────────────────────────
                     _buildTextField(
                       controller: _nidController,
                       hint: 'NID Number',
                       icon: Icons.credit_card,
                     ),
                     const SizedBox(height: 20),
-
-                    // ── ADDRESS (expandable) ───────────────
+                    //Address
                     TextField(
+                      controller: _addressController,
                       maxLines: null,
                       maxLength: 150,
                       style: AppTheme.inputStyle,
@@ -192,7 +263,7 @@ class _RegistrationState extends State<Registration> {
                     ),
                     const SizedBox(height: 15),
 
-                    // ── BLOOD GROUP SELECTOR ───────────────
+                    //blood group
                     GestureDetector(
                       onTap: () {
                         showModalBottomSheet(
@@ -283,7 +354,7 @@ class _RegistrationState extends State<Registration> {
 
                     const SizedBox(height: 30),
 
-                    // ── FINISH BUTTON ──────────────────────
+                    //FINISH
                     Container(
                       width: double.infinity,
                       height: 45,
@@ -306,19 +377,23 @@ class _RegistrationState extends State<Registration> {
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ReceiverDashboard(username: ''),
-                            ),
-                          );
-                        },
-                        child: Text('Finish', style: AppTheme.buttonStyle),
+                        onPressed: _isLoading ? null : _register,
+                        // this line means: like a conditional function
+                        // if loading → disable button (null)
+                        // if not loading → call _register function
+
+                        child: _isLoading
+                            ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                            : Text('Finish', style: AppTheme.buttonStyle),
                       ),
                     ),
-
                   ],
                 ),
               ),
@@ -329,11 +404,7 @@ class _RegistrationState extends State<Registration> {
       ),
     );
   }
-
-  // ── REUSABLE TEXT FIELD ──────────────────────────────────
-  // All 5 personal info fields are identical except for
-  // hint, icon, and obscureText — so we extract them into
-  // one function to avoid repeating the same 15 lines 5 times
+  //TEXT FIELD
   Widget _buildTextField({
     required TextEditingController controller,
     required String hint,
@@ -363,4 +434,6 @@ class _RegistrationState extends State<Registration> {
       ),
     );
   }
+
+
 }

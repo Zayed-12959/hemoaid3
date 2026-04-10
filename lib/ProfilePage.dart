@@ -16,6 +16,10 @@ class ProfilePage extends StatelessWidget {
         shadowColor: Colors.transparent,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text('My Profile', style: AppTheme.appBarStyle),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
         flexibleSpace: Container(
           decoration: BoxDecoration(gradient: AppTheme.primaryGradient),
         ),
@@ -24,7 +28,7 @@ class ProfilePage extends StatelessWidget {
         child: Column(
           children: [
 
-            // ── TOP HEADER SECTION ─────────────────────
+            //TOP HEADER
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 30),
@@ -74,7 +78,7 @@ class ProfilePage extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // ── STATS ROW ──────────────────────────────
+            //STATS ROW
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -90,7 +94,7 @@ class ProfilePage extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // ── INFO SECTION ───────────────────────────
+            //INFO
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
@@ -110,18 +114,14 @@ class ProfilePage extends StatelessWidget {
                 ],
               ),
             ),
-
             const SizedBox(height: 24),
-
-            // ── LOGOUT BUTTON ──────────────────────────
-
           ],
         ),
       ),
     );
   }
 
-  // ── STAT BOX ──────────────────────────────────────────
+  //STAT BOX
   Widget _statBox(String value, String label) {
     return Expanded(
       child: Container(
@@ -157,7 +157,7 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  // ── INFO TILE ──────────────────────────────────────────
+  //INFO TILE
   Widget _infoTile(IconData icon, String label, String value) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'appTheme.dart';
 import 'welcome.dart';
+import 'ProfilePage.dart';
 
 class listTile extends StatefulWidget {
   final String username;
@@ -19,7 +20,7 @@ class _listTileState extends State<listTile> {
       child: Column(
         children: [
 
-          // ── HEADER ────────────────────────────────────
+          //HEADER
           Container(
             width: double.infinity,
             height: 220,
@@ -45,14 +46,18 @@ class _listTileState extends State<listTile> {
             ),
           ),
           SizedBox(height: 20),
-          // ── MENU ITEMS ────────────────────────────────
+          //MENU ITEMS
           ListTile(
             minVerticalPadding: 10,
             leading: Icon(Icons.person, color: AppTheme.primaryRed),
             title: Text('My Profile', style: AppTheme.tileStyle),
-            onTap: () {
-              Navigator.pop(context);
-              if (widget.onProfileClick != null) widget.onProfileClick!();
+            onTap: () {Navigator.pop(context); // closes drawer first
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfilePage(username: widget.username),
+              ),
+            );
             },
           ),
 
@@ -91,16 +96,16 @@ class _listTileState extends State<listTile> {
             onTap: () {},
           ),
 
-          Spacer(), // pushes Log Out button to the bottom
+          Spacer(),
 
-          // ── LOG OUT BUTTON ────────────────────────────
+          //LOG OUT BUTTON
           Padding(
             padding: const EdgeInsets.only(bottom: 30),
             child: Container(
               width: 120,
               height: 40,
               decoration: BoxDecoration(
-                gradient: AppTheme.primaryGradient, // ← gradient from AppTheme
+                gradient: AppTheme.primaryGradient,
                 borderRadius: BorderRadius.circular(30),
                 boxShadow: [
                   BoxShadow(

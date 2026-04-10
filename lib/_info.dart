@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'appTheme.dart';
 
@@ -37,7 +36,7 @@ class _InfoState extends State<info> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
 
-              // ── TOP ROW: avatar + name/address + blood group ──
+              // TOP ROW:
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -100,7 +99,7 @@ class _InfoState extends State<info> {
                 ],
               ),
 
-              // ── BOTTOM ROW: View Details button ───────────────
+              //BOTTOM ROW: View Details button
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -133,7 +132,6 @@ class _InfoState extends State<info> {
                   ),
                 ],
               ),
-
             ],
           ),
         ),

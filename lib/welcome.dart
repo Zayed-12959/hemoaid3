@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hemoaid/DonorDashboard.dart';
-import 'package:hemoaid/ReceiverDashboard.dart';
-import 'package:hemoaid/registration.dart';
+import 'package:hemoaid3/DonorDashboard.dart';
+import 'package:hemoaid3/ReceiverDashboard.dart';
+import 'package:hemoaid3/registration.dart';
 import 'appTheme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,6 +23,7 @@ class _WelcomeState extends State<Welcome> {
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> _login() async {
+
     if (_usernameController.text.isEmpty ||
         _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -62,6 +63,9 @@ class _WelcomeState extends State<Welcome> {
           .get();
 
       String username = userDoc['username'];
+      await _firestore.collection('users').doc(userCredential.user!.uid).update({
+        'currentRole': selectedRole,
+      });
 
       // navigate based on selected role
       if (selectedRole == "Receiver") {

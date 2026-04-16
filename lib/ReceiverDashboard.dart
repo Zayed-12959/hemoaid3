@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'RequestForm.dart';
 import 'listTile.dart';
@@ -18,38 +19,7 @@ class ReceiverDashboard extends StatefulWidget {
 class _ReceiverDashBoardState extends State<ReceiverDashboard> {
   bool showProfile = false;
 
-  final List donors = [
-    {
-      'name': 'Tanin Tahsan',
-      'location': 'Sreekol Laxmikol, Dublia',
-      'bloodGroup': 'B+',
-    },
-    {
-      'name': 'Imran Hossen',
-      'location': 'Pabna Sadar, Pabna',
-      'bloodGroup': 'A+',
-    },
-    {
-      'name': 'Farjana Afrin',
-      'location': 'Dhaka Sadar, Dhaka',
-      'bloodGroup': 'O+',
-    },
-    {
-      'name': 'Tanin Tahsan',
-      'location': 'Sreekol Laxmikol, Dublia',
-      'bloodGroup': 'B+',
-    },
-    {
-      'name': 'Imran Hossen',
-      'location': 'Pabna Sadar, Pabna',
-      'bloodGroup': 'A+',
-    },
-    {
-      'name': 'Farjana Afrin',
-      'location': 'Dhaka Sadar, Dhaka',
-      'bloodGroup': 'O+',
-    },
-  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -254,17 +224,33 @@ class _ReceiverDashBoardState extends State<ReceiverDashboard> {
                 ),
               ],
             )
-                : ListView.builder(
-              itemCount: donors.length,
-              itemBuilder: (context, index) {
-                return info(
-                  name: donors[index]['name'],
-                  address: donors[index]['location'],
-                  bGroup: donors[index]['bloodGroup'],
+                : StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('users')
+                  .where('currentRole', isEqualTo: 'Donor')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Center(child: Text('No donors found'));
+                }
+                final donors = snapshot.data!.docs;
+                return ListView.builder(
+                  itemCount: donors.length,
+                  itemBuilder: (context, index) {
+                    final donor = donors[index].data() as Map<String, dynamic>;
+                    return info(
+                      name: donor['username'] ?? 'Unknown',
+                      address: donor['address'] ?? 'No address',
+                      bGroup: donor['bloodGroup'] ?? '?',
+                    );
+                  },
                 );
               },
             ),
-          ),
+          )
 
         ],
       ),

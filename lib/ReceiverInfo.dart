@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'appTheme.dart';
 
 class Receiverinfo extends StatefulWidget {
-  String name = '';
-  String address = '';
-  String bGroup = '';
+  String name;
+  String address;
+  String bGroup;
+  String docId;
 
   Receiverinfo({
     super.key,
     required this.name,
     required this.address,
     required this.bGroup,
+    required this.docId,
   });
 
   @override
@@ -18,6 +22,36 @@ class Receiverinfo extends StatefulWidget {
 }
 
 class _ReceiverInfoState extends State<Receiverinfo> {
+  bool _isAccepting = false;
+
+  Future<void> _handleAccept(BuildContext dialogContext) async {
+    setState(() => _isAccepting = true);
+
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+
+    await FirebaseFirestore.instance
+        .collection('requests')
+        .doc(widget.docId)
+        .update({'status': 'accepted'});
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .update({'eligible': false});
+
+    setState(() => _isAccepting = false);
+
+    Navigator.pop(dialogContext); // close confirm dialog
+
+    if (mounted) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const AcceptSuccessDialog(),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -36,12 +70,12 @@ class _ReceiverInfoState extends State<Receiverinfo> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
 
-              //TOP ROW
+              // TOP ROW
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
 
-                  //Pic
+                  // Pic
                   Container(
                     width: 80,
                     height: 80,
@@ -76,7 +110,7 @@ class _ReceiverInfoState extends State<Receiverinfo> {
                     ),
                   ),
 
-                  // Blood group and distance
+                  // Blood group
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -97,7 +131,7 @@ class _ReceiverInfoState extends State<Receiverinfo> {
                 ],
               ),
 
-              //Accept Request button
+              // Accept Request button
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -124,7 +158,7 @@ class _ReceiverInfoState extends State<Receiverinfo> {
                       onPressed: () {
                         showDialog(
                           context: context,
-                          builder: (context) => AlertDialog(
+                          builder: (dialogContext) => AlertDialog(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
@@ -140,7 +174,7 @@ class _ReceiverInfoState extends State<Receiverinfo> {
                             ),
                             actions: [
                               TextButton(
-                                onPressed: () => Navigator.pop(context),
+                                onPressed: () => Navigator.pop(dialogContext),
                                 child: Text(
                                   'Cancel',
                                   style: AppTheme.hintStyle,
@@ -152,9 +186,9 @@ class _ReceiverInfoState extends State<Receiverinfo> {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
+                                  onPressed: _isAccepting
+                                      ? null
+                                      : () => _handleAccept(dialogContext),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.transparent,
                                     shadowColor: Colors.transparent,
@@ -162,7 +196,16 @@ class _ReceiverInfoState extends State<Receiverinfo> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                   ),
-                                  child: Text(
+                                  child: _isAccepting
+                                      ? const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                      : Text(
                                     'Accept',
                                     style: AppTheme.buttonStyle,
                                   ),
@@ -182,6 +225,109 @@ class _ReceiverInfoState extends State<Receiverinfo> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class AcceptSuccessDialog extends StatefulWidget {
+  const AcceptSuccessDialog({super.key});
+
+  @override
+  State<AcceptSuccessDialog> createState() => _AcceptSuccessDialogState();
+}
+
+class _AcceptSuccessDialogState extends State<AcceptSuccessDialog>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _scaleAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.elasticOut,
+    );
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 36),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ScaleTransition(
+              scale: _scaleAnimation,
+              child: Container(
+                width: 90,
+                height: 90,
+                decoration: BoxDecoration(
+                  color: Colors.green.shade50,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.check_circle_rounded,
+                  color: Colors.green,
+                  size: 64,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Request Accepted!',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              'You have successfully accepted this blood request. Please contact the receiver as soon as possible.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
+                height: 1.5,
+              ),
+            ),
+            const SizedBox(height: 32),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hemoaid/ReceiverInfo.dart';
+import 'package:hemoaid3/ReceiverInfo.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'appTheme.dart';
 import 'listTile.dart';
 import 'ProfilePage.dart';
@@ -16,39 +18,6 @@ class Donordashboard extends StatefulWidget {
 
 class _DonorDashBoardState extends State<Donordashboard> {
   bool showProfile = false;
-
-  final List receivers = [
-    {
-      'name': 'Tanin Tahsan',
-      'location': 'Sreekol Laxmikol, Dublia',
-      'bloodGroup': 'B+',
-    },
-    {
-      'name': 'Imran Hossen',
-      'location': 'Pabna Sadar, Pabna',
-      'bloodGroup': 'A+',
-    },
-    {
-      'name': 'Farjana Afrin',
-      'location': 'Dhaka Sadar, Dhaka',
-      'bloodGroup': 'O+',
-    },
-    {
-      'name': 'Tanin Tahsan',
-      'location': 'Sreekol Laxmikol, Dublia',
-      'bloodGroup': 'B+',
-    },
-    {
-      'name': 'Imran Hossen',
-      'location': 'Pabna Sadar, Pabna',
-      'bloodGroup': 'A+',
-    },
-    {
-      'name': 'Farjana Afrin',
-      'location': 'Dhaka Sadar, Dhaka',
-      'bloodGroup': 'O+',
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -87,50 +56,75 @@ class _DonorDashBoardState extends State<Donordashboard> {
       body: Column(
         children: [
 
-          //STATUS BAR
-          Card(
-            margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.green.shade50,
-                borderRadius: BorderRadius.circular(15),
-                border: const Border(
-                  left: BorderSide(color: Colors.green, width: 4),
+          //STATUS CARD — Step 5
+          StreamBuilder<DocumentSnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('users')
+                .doc(FirebaseAuth.instance.currentUser!.uid)
+                .snapshots(),
+            builder: (context, snapshot) {
+              bool eligible = true;
+              if (snapshot.hasData && snapshot.data!.exists) {
+                final data = snapshot.data!.data() as Map<String, dynamic>;
+                eligible = data['eligible'] ?? true;
+              }
+              return Card(
+                margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
                 ),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.check_circle, color: Colors.green),
-                  const SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Status: Eligible to Donate',
-                        style: AppTheme.labelStyle.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        ),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: eligible ? Colors.green.shade50 : Colors.red.shade50,
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border(
+                      left: BorderSide(
+                        color: eligible ? Colors.green : Colors.red,
+                        width: 4,
                       ),
-                      Text(
-                        'Your last donation was 4 months ago.',
-                        style: AppTheme.hintStyle.copyWith(
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        eligible ? Icons.check_circle : Icons.cancel,
+                        color: eligible ? Colors.green : Colors.red,
+                      ),
+                      const SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            eligible
+                                ? 'Status: Eligible to Donate'
+                                : 'Status: Not Eligible',
+                            style: AppTheme.labelStyle.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: eligible ? Colors.green : Colors.red,
+                            ),
+                          ),
+                          Text(
+                            eligible
+                                ? 'You can accept a blood request.'
+                                : 'You have already accepted a request.',
+                            style: AppTheme.hintStyle.copyWith(
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           ),
-          SizedBox(height: 8),
+
+          const SizedBox(height: 8),
+
           //SORT DROPDOWN
           Padding(
             padding: const EdgeInsets.all(28.0),
@@ -174,9 +168,7 @@ class _DonorDashBoardState extends State<Donordashboard> {
                       ),
                     ],
                     onChanged: (value) {
-                      setState(() {
-                        value;
-                      });
+                      setState(() {});
                     },
                   ),
                 ),
@@ -184,7 +176,7 @@ class _DonorDashBoardState extends State<Donordashboard> {
             ),
           ),
 
-          //PROFILE OR RECEIVER LIST
+          //PROFILE OR REQUEST LIST — Step 1 & 2
           Expanded(
             child: showProfile
                 ? ListView(
@@ -199,13 +191,35 @@ class _DonorDashBoardState extends State<Donordashboard> {
                 ),
               ],
             )
-                : ListView.builder(
-              itemCount: receivers.length,
-              itemBuilder: (context, index) {
-                return Receiverinfo(
-                  name: receivers[index]['name'],
-                  address: receivers[index]['location'],
-                  bGroup: receivers[index]['bloodGroup'],
+                : StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('requests')
+                  .where('status', isEqualTo: 'pending')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return const Center(
+                      child: CircularProgressIndicator());
+                }
+                if (!snapshot.hasData ||
+                    snapshot.data!.docs.isEmpty) {
+                  return const Center(
+                      child: Text('No blood requests found'));
+                }
+                final requests = snapshot.data!.docs;
+                return ListView.builder(
+                  itemCount: requests.length,
+                  itemBuilder: (context, index) {
+                    final request = requests[index].data()
+                    as Map<String, dynamic>;
+                    return Receiverinfo(
+                      docId: requests[index].id,
+                      name: request['receiverUsername'] ?? 'Unknown',
+                      address: request['address'] ?? 'No address',
+                      bGroup: request['bloodGroup'] ?? '?',
+                    );
+                  },
                 );
               },
             ),

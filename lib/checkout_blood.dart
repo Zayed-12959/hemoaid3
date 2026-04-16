@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'ReceiverDashboard.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 class CheckoutBlood extends StatefulWidget {
   final String patientName;
   final String medicalName;
@@ -54,12 +55,29 @@ class CheckoutBloodState extends State<CheckoutBlood> {
             const SizedBox(height: 24),
             Center(
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  final uid = FirebaseAuth.instance.currentUser!.uid;
+
+                  await FirebaseFirestore.instance.collection('requests').add({
+                    'patientName': widget.patientName,
+                    'medicalName': widget.medicalName,
+                    'phone': widget.phoneNumber,
+                    'requestType': widget.requestType,
+                    'bloodGroup': widget.bloodGroup,
+                    'unit': widget.unit,
+                    'district': widget.district,
+                    'address': widget.address,
+                    'receiverUsername': widget.username,
+                    'receiverUid': uid,
+                    'status': 'pending',
+                    'createdAt': FieldValue.serverTimestamp(),
+                  });
+
                   Navigator.pop(context);
                   showDialog(
                     context: context,
                     barrierDismissible: false,
-                    builder: (context) => SuccessDialog(username: widget.username,),
+                    builder: (context) => SuccessDialog(username: widget.username),
                   );
                 },
                 style: ElevatedButton.styleFrom(

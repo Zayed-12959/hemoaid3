@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hemoaid/ReceiverDashboard.dart';
+import 'package:hemoaid3/ReceiverDashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'appTheme.dart';
 import 'welcome.dart';
